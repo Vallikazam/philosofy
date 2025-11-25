@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Философия • Экзамен</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap');
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --success: #95E1D3;
+            --text: #2D3436;
+            --bg: #F8F9FA;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            padding: 12px 28px;
+            background: var(--bg);
+            border: 2px solid var(--text);
+            border-radius: 50px;
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .back-btn:hover {
+            background: var(--text);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 100px auto 60px;
+            padding: 0 40px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 5em;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero-emoji {
+            font-size: 1.2em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3em;
+            color: #636E72;
+            font-weight: 500;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 10px 24px;
+            background: var(--accent);
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 20px;
+            border: 3px solid var(--text);
+        }
+
+        /* Mode Cards */
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .mode-card {
+            background: var(--white);
+            border: 4px solid var(--text);
+            border-radius: 30px;
+            padding: 50px 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--primary);
+            opacity: 0;
+            transition: all 0.4s;
+            transform: rotate(45deg);
+        }
+
+        .mode-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 12px 12px 0 var(--text);
+        }
+
+        .mode-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .mode-card:nth-child(1) { border-color: var(--primary); }
+        .mode-card:nth-child(2) { border-color: var(--secondary); }
+        .mode-card:nth-child(3) { border-color: var(--accent); }
+        .mode-card:nth-child(4) { border-color: var(--success); }
+
+        .mode-emoji {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .mode-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .mode-desc {
+            font-size: 1.1em;
+            color: #636E72;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Quiz Section */
+        #quiz-container {
+            display: none;
+        }
+
+        .quiz-header {
+            background: var(--white);
+            border: 4px solid var(--text);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .progress-bar-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .progress-track {
+            background: var(--bg);
+            height: 20px;
+            border-radius: 50px;
+            overflow: hidden;
+            border: 3px solid var(--text);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 20px;
+            border: 3px solid var(--text);
+        }
+
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: #636E72;
+            margin-top: 8px;
+        }
+
+        /* Question Box */
+        .question-box {
+            background: var(--white);
+            border: 4px solid var(--text);
+            border-radius: 30px;
+            padding: 50px;
+            margin-bottom: 40px;
+        }
+
+        .question-badge {
+            display: inline-block;
+            padding: 10px 24px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            border: 3px solid var(--text);
+        }
+
+        .question-text {
+            font-size: 1.6em;
+            font-weight: 600;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        /* Options */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .option {
+            background: var(--bg);
+            border: 4px solid var(--text);
+            border-radius: 20px;
+            padding: 24px 28px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .option-marker {
+            width: 32px;
+            height: 32px;
+            border: 4px solid var(--text);
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            background: var(--white);
+            transform: translateX(10px);
+        }
+
+        .option.selected {
+            background: var(--accent);
+        }
+
+        .option.selected .option-marker {
+            background: var(--text);
+        }
+
+        .option.correct {
+            background: var(--success);
+            border-color: var(--text);
+        }
+
+        .option.correct .option-marker {
+            background: var(--text);
+            position: relative;
+        }
+
+        .option.correct .option-marker::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--white);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .option.incorrect {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .option.incorrect .option-marker {
+            background: var(--text);
+            border-color: var(--text);
+            position: relative;
+        }
+
+        .option.incorrect .option-marker::after {
+            content: '✗';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--white);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 18px 48px;
+            border: 4px solid var(--text);
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--text);
+            transform: translateY(-4px);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Flashcard */
+        .flashcard {
+            background: var(--white);
+            border: 4px solid var(--text);
+            border-radius: 30px;
+            padding: 50px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flashcard-question {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.6em;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .flashcard-options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .flashcard-option {
+            background: var(--bg);
+            border: 3px solid var(--text);
+            padding: 18px 24px;
+            border-radius: 16px;
+            font-weight: 500;
+        }
+
+        .flashcard-option.correct {
+            background: var(--success);
+            font-weight: 700;
+        }
+
+        /* Search */
+        .search-box {
+            margin-bottom: 40px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 24px 32px;
+            background: var(--white);
+            border: 4px solid var(--text);
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 1.2em;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Result */
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .result-emoji {
+            font-size: 8em;
+            margin-bottom: 30px;
+        }
+
+        .result-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .result-score {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 8em;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 40px 0;
+            line-height: 1;
+        }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .modes-grid { grid-template-columns: 1fr; }
+            .hero-title { font-size: 3em; }
+            .stats { grid-template-columns: 1fr; }
+            .question-box { padding: 30px; }
+            .navbar { padding: 16px 24px; }
+            .container { padding: 0 24px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <span>📚</span>
+            <span>Философия</span>
+        </div>
+        <button class="back-btn" onclick="returnToMenu()" id="backBtn">← Меню</button>
+    </nav>
+
+    <div class="container">
+        <div id="mode-selection">
+            <div class="hero">
+                <h1 class="hero-title">
+                    Экзамен<br>
+                    <span class="hero-emoji">🎓</span>
+                </h1>
+                <p class="hero-subtitle">Платформа для подготовки</p>
+                <div class="hero-badge">313 вопросов готовы</div>
+            </div>
+
+            <div class="modes-grid">
+                <div class="mode-card" onclick="startMode('quiz')">
+                    <span class="mode-emoji">📝</span>
+                    <div class="mode-title">Тестирование</div>
+                    <div class="mode-desc">30 случайных вопросов</div>
+                </div>
+
+                <div class="mode-card" onclick="startMode('practice')">
+                    <span class="mode-emoji">💪</span>
+                    <div class="mode-title">Практика</div>
+                    <div class="mode-desc">Учись с проверкой</div>
+                </div>
+
+                <div class="mode-card" onclick="startMode('flashcards')">
+                    <span class="mode-emoji">🗂️</span>
+                    <div class="mode-title">Карточки</div>
+                    <div class="mode-desc">Быстрое повторение</div>
+                </div>
+
+                <div class="mode-card" onclick="startMode('browse')">
+                    <span class="mode-emoji">📚</span>
+                    <div class="mode-title">Просмотр</div>
+                    <div class="mode-desc">Все вопросы + поиск</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quiz-container">
+            <div class="quiz-header">
+                <div class="progress-bar-container">
+                    <div class="progress-label">
+                        <span>Прогресс</span>
+                        <span id="progress-text">0 / 0</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="progress-bar" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div id="current-question" class="stat-value">1</div>
+                        <div class="stat-label">Вопрос</div>
+                    </div>
+                    <div class="stat">
+                        <div id="correct-count" class="stat-value">0</div>
+                        <div class="stat-label">Правильно</div>
+                    </div>
+                    <div class="stat">
+                        <div id="incorrect-count" class="stat-value">0</div>
+                        <div class="stat-label">Неправильно</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="question-area"></div>
+
+            <div class="controls">
+                <button id="next-btn" class="btn btn-primary" onclick="nextQuestion()" style="display:none;">Далее →</button>
+                <button id="finish-btn" class="btn btn-primary" onclick="finishQuiz()" style="display:none;">Завершить</button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="result-screen">
+            <div class="result-emoji">🎉</div>
+            <h2 class="result-title">Тест завершен!</h2>
+            <div class="result-score" id="final-score">0%</div>
+            <div class="quiz-header">
+                <div class="stats">
+                    <div class="stat">
+                        <div id="result-correct" class="stat-value">0</div>
+                        <div class="stat-label">Правильно</div>
+                    </div>
+                    <div class="stat">
+                        <div id="result-incorrect" class="stat-value">0</div>
+                        <div class="stat-label">Неправильно</div>
+                    </div>
+                    <div class="stat">
+                        <div id="result-total" class="stat-value">0</div>
+                        <div class="stat-label">Всего</div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="restartQuiz()" style="margin-top: 40px;">🔄 Попробовать снова</button>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [{"Question #": "1", "Question": "Representative of the Milesian school:", "Correct Answer Letter": "E", "Correct Answer Text": "Thales", "Options": {"A": "Socrates", "B": "Democritus", "C": "Heraclitus", "D": "Diogenes", "E": "Thales"}}, {"Question #": "2", "Question": "Forms of worldview:", "Correct Answer Letter": "B", "Correct Answer Text": "Myth, religion, philosophy", "Options": {"A": "Consciousness, thinking, mind", "B": "Myth, religion, philosophy", "C": "God, nature, society", "D": "Ontology, epistemology, axiology", "E": "Man, person, individual"}}, {"Question #": "3", "Question": "A thinker who claims that a philosopher should be at the head of the state:", "Correct Answer Letter": "E", "Correct Answer Text": "Plato", "Options": {"A": "Aristotle", "B": "Democritus", "C": "Heraclitus", "D": "Epicurus", "E": "Plato"}}, {"Question #": "4", "Question": "What is common between myth, religion and philosophy:", "Correct Answer Letter": "B", "Correct Answer Text": "world outlook", "Options": {"A": "reflection", "B": "world outlook", "C": "scientific approach", "D": "rationalism", "E": "agnosticism"}}, {"Question #": "5", "Question": "This function of philosophy is to develop one's own attitude to the universe and one's place in it:", "Correct Answer Letter": "A", "Correct Answer Text": "The worldview function", "Options": {"A": "The worldview function", "B": "The methodological function", "C": "The moral function", "D": "The axiological function", "E": "The educational function"}}, {"Question #": "6", "Question": "This function of philosophy asserts the consciously normative attitude of a person to himself and to other people:", "Correct Answer Letter": "C", "Correct Answer Text": "The moral function", "Options": {"A": "The worldview function", "B": "The methodological function", "C": "The moral function", "D": "The axiological function", "E": "The motivational function"}}, {"Question #": "7", "Question": "This function of philosophy teaches us to recognize the values of the surrounding world:", "Correct Answer Letter": "D", "Correct Answer Text": "The axiological function", "Options": {"A": "The worldview function", "B": "The methodological function", "C": "The moral function", "D": "The axiological function", "E": "The motivational function"}}, {"Question #": "8", "Question": "This function of philosophy brings up certain interests and ideals in a person, which determine his behavior and the achievement of his goals:", "Correct Answer Letter": "E", "Correct Answer Text": "The motivational function", "Options": {"A": "The worldview function", "B": "The methodological function", "C": "The moral function", "D": "The axiological function", "E": "The motivational function"}}, {"Question #": "9", "Question": "The direction of Aristotle's followers in Medieval Arab-Muslim Philosophy is:", "Correct Answer Letter": "A", "Correct Answer Text": "Peripateticism", "Options": {"A": "Peripateticism", "B": "Kalam", "C": "Ismailism", "D": "Ishraqism", "E": "Sufism"}}, {"Question #": "10", "Question": "In what period of philosophy was Man the image and likeness of God?:", "Correct Answer Letter": "B", "Correct Answer Text": "Medieval Philosophy", "Options": {"A": "Ancient Philosophy", "B": "Medieval Philosophy", "C": "Renaissance Philosophy", "D": "Philosophy of Modern Time", "E": "Philosophy of 20th century"}}, {"Question #": "11", "Question": "Anthropocentrism and humanism are inherent in the epoch of:", "Correct Answer Letter": "C", "Correct Answer Text": "Renaissance Philosophy", "Options": {"A": "Ancient Philosophy", "B": "Medieval Philosophy", "C": "Renaissance Philosophy", "D": "Philosophy of Modern Time", "E": "Philosophy of 20th century"}}, {"Question #": "12", "Question": "In the philosophy of this period, the motives of individualism, egoism, and utilitarianism associated with nascent capitalism are clearly heard:", "Correct Answer Letter": "D", "Correct Answer Text": "Philosophy of Modern Time", "Options": {"A": "Ancient Philosophy", "B": "Medieval Philosophy", "C": "Renaissance Philosophy", "D": "Philosophy of Modern Time", "E": "Philosophy of 20th century"}}, {"Question #": "13", "Question": "A philosophical concept that denies the possibility of a reasonable knowledge of reality:", "Correct Answer Letter": "A", "Correct Answer Text": "Irrationalism", "Options": {"A": "Irrationalism", "B": "Existentialism", "C": "Utilitarianism", "D": "Personalism", "E": "Pragmatism"}}, {"Question #": "14", "Question": "Who said «Philosophy begins with wonder»:", "Correct Answer Letter": "A", "Correct Answer Text": "Aristotle", "Options": {"A": "Aristotle", "B": "Thales", "C": "Plato", "D": "Socrates", "E": "Descartes"}}, {"Question #": "15", "Question": "Father of Greek philosophy is:", "Correct Answer Letter": "A", "Correct Answer Text": "Thales", "Options": {"A": "Thales", "B": "Pythagoras", "C": "Augustine", "D": "Socrates", "E": "Rorty"}}, {"Question #": "16", "Question": "The thinkers of Milesian School were the thinkers of:", "Correct Answer Letter": "A", "Correct Answer Text": "nature", "Options": {"A": "nature", "B": "metaphysics", "C": "religion", "D": "faith", "E": "truth"}}, {"Question #": "17", "Question": "The Muslim Renaissance occurred:", "Correct Answer Letter": "A", "Correct Answer Text": "Before the European Renaissance", "Options": {"A": "Before the European Renaissance", "B": "During the European Renaissance", "C": "After the European Renaissance", "D": "In Modern times", "E": "In the Age of Enlightenment"}}, {"Question #": "18", "Question": "Which is the branch of philosophy that studies issues concerning art and beauty?:", "Correct Answer Letter": "C", "Correct Answer Text": "Aesthetics", "Options": {"A": "Logics", "B": "Epistemology", "C": "Aesthetics", "D": "Metaphysics", "E": "Ethics"}}, {"Question #": "19", "Question": "The goal of philosophy is the liberation of man from fears of nature, death, and gods, according to:", "Correct Answer Letter": "B", "Correct Answer Text": "Epicurus", "Options": {"A": "Socrates", "B": "Epicurus", "C": "Pyrrho", "D": "Plato", "E": "Zeno"}}, {"Question #": "20", "Question": "\"I believe because it is absurd\" was claimed by:", "Correct Answer Letter": "B", "Correct Answer Text": "Tertullian", "Options": {"A": "Augustine", "B": "Tertullian", "C": "Thomas Aquinas", "D": "Bruno", "E": "Thomas More"}}, {"Question #": "21", "Question": "Language, myth, art, religion, history, and science in E. Cassirer's philosophy are:", "Correct Answer Letter": "B", "Correct Answer Text": "Symbolic forms", "Options": {"A": "Forms of social consciousness", "B": "Symbolic forms", "C": "Manifestations of the Absolute Spirit", "D": "\"Things-in-themselves\"", "E": "Social institutions"}}, {"Question #": "22", "Question": "Representatives of marxism:", "Correct Answer Letter": "E", "Correct Answer Text": "Engels, Plekhanov", "Options": {"A": "Popper, Mach, Avenarius", "B": "Scheler, Gehlen, Pleaser", "C": "Sartre, Camus, Jaspers", "D": "Freud, Jung, Simmel", "E": "Engels, Plekhanov"}}, {"Question #": "23", "Question": "Representatives of positivism:", "Correct Answer Letter": "A", "Correct Answer Text": "Comte, Mach, Avenarius", "Options": {"A": "Comte, Mach, Avenarius", "B": "Scheler, Gehlen, Plessner", "C": "Sartre, Camus, Jaspers", "D": "Freud, Jung, Simmel", "E": "Marx, Engels, Plekhanov"}}, {"Question #": "24", "Question": "Representatives of post-positivism:", "Correct Answer Letter": "B", "Correct Answer Text": "Popper, Kuhn, Lakatos", "Options": {"A": "Hegel, Feuerbach, Marx", "B": "Popper, Kuhn, Lakatos", "C": "Kierkegaard, Sartre, Camus", "D": "Schleiermacher, Dilthey, Gadamer", "E": "Husserl, Heidegger, Jaspers"}}, {"Question #": "25", "Question": "Which philosophical movement did not emerge in ancient Greek philosophy?", "Correct Answer Letter": "C", "Correct Answer Text": "Pragmatism", "Options": {"A": "Cynicism", "B": "Stoicism", "C": "Pragmatism", "D": "Epicureanism", "E": "Eudaimonism"}}, {"Question #": "26", "Question": "Сreationism is:", "Correct Answer Letter": "A", "Correct Answer Text": "A principle according to which God created the world from nothing", "Options": {"A": "A principle according to which God created the world from nothing", "B": "A doctrine about the materiality of the world", "C": "Nominalism", "D": "Realism", "E": "Fatalism"}}, {"Question #": "27", "Question": "What is the main idea of Renaissance philosophy, which primarily focused on man as the center of the universe?", "Correct Answer Letter": "B", "Correct Answer Text": "Anthropocentrism", "Options": {"A": "Aesthetic understanding of reality", "B": "Anthropocentrism", "C": "Individualism", "D": "Anti-scholasticism", "E": "Rationalism"}}, {"Question #": "28", "Question": "To which direction in contemporary philosophy can the statement \"Philosophy is the logic of science\" be attributed?", "Correct Answer Letter": "D", "Correct Answer Text": "Positivism", "Options": {"A": "Hermeneutics", "B": "Existentialism", "C": "Phenomenology", "D": "Positivism", "E": "Dialectics"}}, {"Question #": "29", "Question": "In which era did the issues of the methodology of scientific knowledge become central?", "Correct Answer Letter": "D", "Correct Answer Text": "Modern times", "Options": {"A": "Antiquity", "B": "Medieval", "C": "Renaissance", "D": "Modern times", "E": "Enlightenment"}}, {"Question #": "30", "Question": "The central category of axiology is:", "Correct Answer Letter": "B", "Correct Answer Text": "Value", "Options": {"A": "Truth", "B": "Value", "C": "Morality", "D": "Aesthetics", "E": "Being"}}, {"Question #": "1", "Question": "The ancient Greek philosopher Pythagoras stated:", "Correct Answer Letter": "A", "Correct Answer Text": "All things are similar in number", "Options": {"A": "All things are similar in number", "B": "War is the father of everything and the mother of everything", "C": "Know thyself", "D": "I know that I don't know anything", "E": "Everything flows, everything changes"}}, {"Question #": "2", "Question": "An ancient philosopher who believed that the material world consists of atoms:", "Correct Answer Letter": "D", "Correct Answer Text": "Democritus", "Options": {"A": "Aristotle", "B": "Pyrrho", "C": "Zeno", "D": "Democritus", "E": "Heraclitus"}}, {"Question #": "3", "Question": "Invisible, omnipresent law of nature, society, human behavior and thinking, the path:", "Correct Answer Letter": "E", "Correct Answer Text": "Tao", "Options": {"A": "Lee", "B": "Fa", "C": "Siao", "D": "Zhen", "E": "Tao"}}, {"Question #": "4", "Question": "Teachings about Being:", "Correct Answer Letter": "E", "Correct Answer Text": "Ontology", "Options": {"A": "Epistemology", "B": "Axiology", "C": "Anthology", "D": "Anthropology", "E": "Ontology"}}, {"Question #": "5", "Question": "What philosophical direction “Space and time are forms of our perception” belong to:", "Correct Answer Letter": "C", "Correct Answer Text": "Subjective idealism", "Options": {"A": "Materialism", "B": "Objective idealism", "C": "Subjective idealism", "D": "Mechanistic materialism"}}, {"Question #": "6", "Question": "Is something that can be said to exist:", "Correct Answer Letter": "C", "Correct Answer Text": "Being", "Options": {"A": "Knowledge", "B": "Category", "C": "Being", "D": "Notion", "E": "Space"}}, {"Question #": "7", "Question": "In Hinduism, the absolute reality is designated by the concept:", "Correct Answer Letter": "D", "Correct Answer Text": "Brahman", "Options": {"A": "Atman", "B": "Moksha", "C": "Jinx", "D": "Brahman", "E": "Ahimsa"}}, {"Question #": "8", "Question": "In Taoism adherence to the principle of “naturalness” means:", "Correct Answer Letter": "A", "Correct Answer Text": "following to the law of nature and cosmos", "Options": {"A": "following to the law of nature and cosmos", "B": "following to your own needs", "C": "transforming the outer world for the better", "D": "implementing the principle of love for the neighbour", "E": "faith in God"}}, {"Question #": "9", "Question": "The author of the expression: “Thought and being are one and the same”:", "Correct Answer Letter": "E", "Correct Answer Text": "Parmenides", "Options": {"A": "Plato", "B": "Pythagoras", "C": "Heraclitus", "D": "Aristotle", "E": "Parmenides"}}, {"Question #": "10", "Question": "“Don’t harm the living, sentient beings” is the commandment of:", "Correct Answer Letter": "A", "Correct Answer Text": "ahimsa", "Options": {"A": "ahimsa", "B": "moksha", "C": "samsara", "D": "karma", "E": "nirvana"}}, {"Question #": "11", "Question": "\"Everything flows\", there is nothing constant in the universe, considered:", "Correct Answer Letter": "D", "Correct Answer Text": "Heraclitus", "Options": {"A": "Thales", "B": "Anaximander", "C": "Democritus", "D": "Heraclitus", "E": "Protagoras"}}, {"Question #": "12", "Question": "The expression “One cannot enter into the same river even once” is…:", "Correct Answer Letter": "A", "Correct Answer Text": "relativism", "Options": {"A": "relativism", "B": "sophism", "C": "skepticism", "D": "pessimism", "E": "agnosticism"}}, {"Question #": "13", "Question": "“Motion is unthinkable” – assumed:", "Correct Answer Letter": "C", "Correct Answer Text": "Zeno of Elea", "Options": {"A": "Thales", "B": "Heraclitus of Ephesus", "C": "Zeno of Elea", "D": "Diogenes of Sinope", "E": "Pythagoras of Samos"}}, {"Question #": "14", "Question": "According to Parmenides, being is:", "Correct Answer Letter": "A", "Correct Answer Text": "eternal, invariable, united", "Options": {"A": "eternal, invariable, united", "B": "ideal, eternal, multiple", "C": "invariable, plural", "D": "material, variable, ultimate"}}, {"Question #": "15", "Question": "In ancient Greek philosophy, the impossibility of think about motion has been proven in:", "Correct Answer Letter": "B", "Correct Answer Text": "Zeno’s paradoxes", "Options": {"A": "Aristotelian syllogisms", "B": "Zeno’s paradoxes", "C": "Pythagorean proves", "D": "Socrates’ definitions", "E": "Plato's dialogues"}}, {"Question #": "16", "Question": "Any change, transformation, and process is:", "Correct Answer Letter": "A", "Correct Answer Text": "motion", "Options": {"A": "motion", "B": "evolution", "C": "involution", "D": "development", "E": "progress"}}, {"Question #": "17", "Question": "Category, reflecting the external, sensibly perceived sides of objects and processes:", "Correct Answer Letter": "A", "Correct Answer Text": "phenomenon", "Options": {"A": "phenomenon", "B": "image", "C": "configuration", "D": "profile", "E": "shape"}}, {"Question #": "18", "Question": "The negation of the causality principle:", "Correct Answer Letter": "C", "Correct Answer Text": "indeterminism", "Options": {"A": "determinism", "B": "agnosticism", "C": "indeterminism", "D": "fatalism", "E": "idealism"}}, {"Question #": "19", "Question": "Ancient philosopher, who recognized water, earth, fire and air as a system of world’s eternal elements and forces:", "Correct Answer Letter": "B", "Correct Answer Text": "Empedocles", "Options": {"A": "Epicurus", "B": "Empedocles", "C": "Anaximenes", "D": "Anaximander", "E": "Heraclitus"}}, {"Question #": "20", "Question": "Which Pre-Socratic philosopher claimed everything was made of atoms?:", "Correct Answer Letter": "D", "Correct Answer Text": "Democritus", "Options": {"A": "Parmenides", "B": "Thales", "C": "Pythagoras", "D": "Democritus", "E": "Heraclitus"}}, {"Question #": "21", "Question": "According to .. all phenomena in the world are planned in advance and the possibility of change is rejected:", "Correct Answer Letter": "A", "Correct Answer Text": "fatalism", "Options": {"A": "fatalism", "B": "determinism", "C": "formalism", "D": "indeterminism", "E": "providentialism"}}, {"Question #": "22", "Question": "Immanence idea are known as:", "Correct Answer Letter": "A", "Correct Answer Text": "Innate ideas", "Options": {"A": "Innate ideas", "B": "Adventitious ideas", "C": "Factitious ideas", "D": "Beliefs", "E": "rational thoughts"}}, {"Question #": "23", "Question": "This philosophy calls for enduring what cannot be changed and for maintaining abstinence from temptation:", "Correct Answer Letter": "A", "Correct Answer Text": "stoicism", "Options": {"A": "stoicism", "B": "epicureanism", "C": "quietism", "D": "quakerism", "E": "providentialism"}}, {"Question #": "24", "Question": "The arche of things is apeiron, according to:", "Correct Answer Letter": "A", "Correct Answer Text": "Anaximander", "Options": {"A": "Anaximander", "B": "Thales", "C": "Plato", "D": "Socrates", "E": "Abai"}}, {"Question #": "25", "Question": "Democritus is belonging to … school:", "Correct Answer Letter": "A", "Correct Answer Text": "atomistic", "Options": {"A": "atomistic", "B": "ionian", "C": "idealist", "D": "elean", "E": "hellenistic"}}, {"Question #": "26", "Question": "Idea of separation into the world of things and the world of ideas belong to:", "Correct Answer Letter": "A", "Correct Answer Text": "Plato", "Options": {"A": "Plato", "B": "Pythagoras", "C": "Thales", "D": "Descartes", "E": "Richard Rorty"}}, {"Question #": "27", "Question": "Who distinguished world of ideas and physical world?:", "Correct Answer Letter": "A", "Correct Answer Text": "Plato", "Options": {"A": "Plato", "B": "Aristotle", "C": "Descartes", "D": "Richard Rorty", "E": "Romans"}}, {"Question #": "28", "Question": "Eternal Ideas beyond the physical world, according to Aristotle, is:", "Correct Answer Letter": "A", "Correct Answer Text": "Forms", "Options": {"A": "Forms", "B": "Dialectics", "C": "Phenomenon", "D": "Episteme", "E": "no answer"}}, {"Question #": "29", "Question": "The relativist philosopher:", "Correct Answer Letter": "B", "Correct Answer Text": "Protagoras", "Options": {"A": "Thomas Aquinas", "B": "Protagoras", "C": "Anaximander", "D": "Socrates", "E": "Alexander"}}, {"Question #": "30", "Question": "The term for \"the extinction of consciousness,\" a state of absolute calm and complete imperturbability in Hinduism is:", "Correct Answer Letter": "A", "Correct Answer Text": "Nirvana", "Options": {"A": "Nirvana", "B": "Karma", "C": "Dharma", "D": "Ahimsa", "E": "Jiva"}}, {"Question #": "31", "Question": "Dualism in the consideration of the principle of Prakriti and Purusha was presented in the schools:", "Correct Answer Letter": "A", "Correct Answer Text": "Samkhya and Yoga", "Options": {"A": "Samkhya and Yoga", "B": "Buddhism and Yoga", "C": "Charvaka and Lokayaca", "D": "Nyaya and Vaisheshika", "E": "Vedanta and Nyaya"}}, {"Question #": "32", "Question": "The author of the book \"The World as Will and Representation\", whose teaching became the source of the philosophy of life:", "Correct Answer Letter": "A", "Correct Answer Text": "A. Schopenhauer", "Options": {"A": "A. Schopenhauer", "B": "Z. Freud", "C": "F. Nietzsche", "D": "M. Scheler", "E": "A. Gehlen"}}, {"Question #": "33", "Question": "What is the nature of the Platonic idea?", "Correct Answer Letter": "D", "Correct Answer Text": "The idea is immaterial but conceivable", "Options": {"A": "The idea is immaterial and inconceivable", "B": "The idea is material but inconceivable", "C": "The idea is material and conceivable", "D": "The idea is immaterial but conceivable", "E": "None of the above"}}, {"Question #": "34", "Question": "The existence of many original foundations and principles of being affirms:", "Correct Answer Letter": "D", "Correct Answer Text": "Pluralism", "Options": {"A": "Agnosticism", "B": "Empiricism", "C": "Relativism", "D": "Pluralism", "E": "Rationalism"}}, {"Question #": "1", "Question": "Indicate the law of dialectics:", "Correct Answer Letter": "D", "Correct Answer Text": "the law of unity and struggle of opposites", "Options": {"A": "the law of gravity", "B": "law of conservation of matter and energy", "C": "the law of the excluded middle", "D": "the law of unity and struggle of opposites", "E": "law of Sufficient Reason"}}, {"Question #": "2", "Question": "Mayeutics is:", "Correct Answer Letter": "C", "Correct Answer Text": "Socratic method of finding the truth", "Options": {"A": "The ability to cleverly debate", "B": "The art of having a conversation, an argument", "C": "Socratic method of finding the truth", "D": "The ideal of physical and moral perfection", "E": "The beginning of being"}}, {"Question #": "3", "Question": "Basic laws and categories of formal logic discovered:", "Correct Answer Letter": "C", "Correct Answer Text": "Aristotle", "Options": {"A": "Socrates", "B": "Empedocles", "C": "Aristotle", "D": "Plato", "E": "Plotinus"}}, {"Question #": "4", "Question": "Know thyself - said:", "Correct Answer Letter": "E", "Correct Answer Text": "Socrates", "Options": {"A": "Confucius", "B": "Heraclitus", "C": "Protagoras", "D": "Parmenides", "E": "Socrates"}}, {"Question #": "5", "Question": "Who was called the \"Second Teacher\" in world philosophy:", "Correct Answer Letter": "B", "Correct Answer Text": "Al-Farabi", "Options": {"A": "Al-Ghazali", "B": "Al-Farabi", "C": "Al-Biruni", "D": "Al-Khwarizmi", "E": "Al-Kindi"}}, {"Question #": "6", "Question": "The third law of dialectics:", "Correct Answer Letter": "E", "Correct Answer Text": "The law of negation of negation", "Options": {"A": "The law of gravity", "B": "Law of conservation of matter and energy", "C": "The law of the excluded middle", "D": "Law of sufficient reason", "E": "The law of negation of negation"}}, {"Question #": "7", "Question": "Philosophical doctrine that denies the fundamental possibility of knowing the world:", "Correct Answer Letter": "B", "Correct Answer Text": "Agnosticism", "Options": {"A": "Skepticism", "B": "Agnosticism", "C": "Sensationalism", "D": "Anthropologism", "E": "Atheism"}}, {"Question #": "8", "Question": "A philosophical method based on decomposition phenomenon into its constituent parts and sides:", "Correct Answer Letter": "A", "Correct Answer Text": "Analysis", "Options": {"A": "Analysis", "B": "Synthesis", "C": "Dialectic", "D": "Metaphysics", "E": "Eclecticism"}}, {"Question #": "9", "Question": "A philosophical method based on the consideration of things, and processes from two opposite points of view:", "Correct Answer Letter": "C", "Correct Answer Text": "Dialectics", "Options": {"A": "Analysis", "B": "Synthesis", "C": "Dialectics", "D": "Metaphysics", "E": "Eclecticism"}}, {"Question #": "10", "Question": "Teaching about knowledge:", "Correct Answer Letter": "B", "Correct Answer Text": "Epistemology", "Options": {"A": "Ontology", "B": "Metaphysics", "D": "Axiology", "E": "Anthropology"}}, {"Question #": "11", "Question": "What does the Greek word “Logos” mean?", "Correct Answer Letter": "A", "Correct Answer Text": "science", "Options": {"A": "science", "B": "object", "C": "religion", "D": "idea", "E": "subject"}}, {"Question #": "12", "Question": "Author of the “double-truth” theory:", "Correct Answer Letter": "B", "Correct Answer Text": "Ibn-Rushd", "Options": {"A": "Ibn-Sina", "B": "Ibn-Rushd", "C": "Al-Kindi", "D": "Ibn-Arabi", "E": "Al-Ghazali"}}, {"Question #": "13", "Question": "“Knowledge comes only or primarily from sensory experience”:", "Correct Answer Letter": "E", "Correct Answer Text": "empiricism", "Options": {"A": "skepticism", "B": "rationalism", "C": "agnosticism", "D": "phenomenology", "E": "empiricism"}}, {"Question #": "14", "Question": "Transition from the general to the specific knowledge:", "Correct Answer Letter": "C", "Correct Answer Text": "deduction", "Options": {"A": "induction", "B": "analysis", "C": "deduction", "D": "abstracting", "E": "synthesis"}}, {"Question #": "15", "Question": "Rational knowledge includes:", "Correct Answer Letter": "A", "Correct Answer Text": "concept, judgment, conclusion", "Options": {"A": "concept, judgment, conclusion", "B": "analogy, hypothesis, ordering", "C": "induction, deduction, generalization", "D": "intuition, reason, mind", "E": "sensation, perception, representation"}}, {"Question #": "16", "Question": "“Cognition is the recollection of the ideas that soul had once beheld”, affirms:", "Correct Answer Letter": "C", "Correct Answer Text": "Plato", "Options": {"A": "Epicurus", "B": "Aristotle", "C": "Plato", "D": "Socrates", "E": "Pythagoras"}}, {"Question #": "18", "Question": "School of thought that questions the possibility of certainty in knowledge:", "Correct Answer Letter": "A", "Correct Answer Text": "skepticism", "Options": {"A": "skepticism", "B": "pessimism", "C": "optimism", "D": "realism", "E": "nominalism"}}, {"Question #": "19", "Question": "The author of 3 laws of dialectics:", "Correct Answer Letter": "A", "Correct Answer Text": "G. Hegel", "Options": {"A": "G. Hegel", "B": "L. Feuerbach", "C": "I. Kant", "D": "J. Fichte", "E": "F. Schelling"}}, {"Question #": "20", "Question": "The concepts of \"Ego\", \"It\", \"Super-Ego\" are basic in:", "Correct Answer Letter": "B", "Correct Answer Text": "psychoanalysis", "Options": {"A": "existentialism", "B": "psychoanalysis", "C": "personalism", "D": "machism", "E": "positivism"}}, {"Question #": "21", "Question": "Which is the Epistemological question?:", "Correct Answer Letter": "A", "Correct Answer Text": "How can we prove our answers?", "Options": {"A": "How can we prove our answers?", "B": "What sorts of things exist?", "C": "What is happiness?", "D": "Is some art unethical?", "E": "Do divine commands make right acts right, or are their rightness based on something else?"}}, {"Question #": "22", "Question": "Rationalism is:", "Correct Answer Letter": "A", "Correct Answer Text": "doctrine that affirms that all knowledge is based on reason", "Options": {"A": "doctrine that affirms that all knowledge is based on reason", "B": "a doctrine that affirms that all knowledge is based on experience", "C": "a view more in harmony with science than with traditional religion", "D": "new ideas in all areas of the culture", "E": "the mechanistic picture of the world"}}, {"Question #": "23", "Question": "Dialectics in antique philosophy means:", "Correct Answer Letter": "A", "Correct Answer Text": "the art of debate", "Options": {"A": "the art of debate", "B": "alternative style of thinking", "C": "the development of the “absolute idea”", "D": "the study of the objective world", "E": "the theory of scientific cognition"}}, {"Question #": "24", "Question": "Understanding of facts, information, descriptions, which is acquired through experience:", "Correct Answer Letter": "B", "Correct Answer Text": "Knowledge", "Options": {"A": "Theory", "B": "Knowledge", "C": "Stereotype", "D": "Work", "E": "Classification"}}, {"Question #": "25", "Question": "He created a philosophical system based on the dialectical method:", "Correct Answer Letter": "D", "Correct Answer Text": "Georg Hegel", "Options": {"A": "Socrates", "B": "Rene Descartes", "C": "Francis Bacon", "D": "Georg Hegel", "E": "Aristotle"}}, {"Question #": "26", "Question": "Who introduced sophisms?:", "Correct Answer Letter": "A", "Correct Answer Text": "Protagoras", "Options": {"A": "Protagoras", "B": "Thales", "C": "Pythagoras", "D": "Plato", "E": "Alexander"}}, {"Question #": "27", "Question": "Author of 10 Categories of logics:", "Correct Answer Letter": "A", "Correct Answer Text": "Aristotle", "Options": {"A": "Aristotle", "B": "Plato", "C": "Thales", "D": "Descartes", "E": "Democritus"}}, {"Question #": "28", "Question": "The famous words \"Language is the house of being\" belong to:", "Correct Answer Letter": "A", "Correct Answer Text": "M. Heidegger", "Options": {"A": "M. Heidegger", "B": "K. Jaspers", "C": "J.-P. Sartre", "D": "A. Camus", "E": "K. Popper"}}, {"Question #": "29", "Question": "\"Have the courage to use your own understanding!\" wrote:", "Correct Answer Letter": "E", "Correct Answer Text": "Kant", "Options": {"A": "Diderot", "B": "Voltaire", "C": "Montaigne", "D": "Rousseau", "E": "Kant"}}, {"Question #": "30", "Question": "The concept of double truth, the truth of faith and the truth of knowledge, which played a significant role in the rationalization of knowledge, is most developed in the philosophy of:", "Correct Answer Letter": "B", "Correct Answer Text": "Ibn Rushd", "Options": {"A": "Al-Kindi", "B": "Ibn Rushd", "C": "Al-Farabi", "D": "Al-Ghazali", "E": "Al-Biruni"}}, {"Question #": "32", "Question": "Francis Bacon was the founder of:", "Correct Answer Letter": "C", "Correct Answer Text": "Empiricism", "Options": {"A": "Nominalism", "B": "Rationalism", "C": "Empiricism", "D": "Realism", "E": "Positivism"}}, {"Question #": "33", "Question": "Which philosophical movement corresponds to the statement \"There is nothing in the intellect that was not first in the senses\"?", "Correct Answer Letter": "A", "Correct Answer Text": "Empiricism", "Options": {"A": "Empiricism", "B": "Rationalism", "C": "Agnosticism", "D": "Irrationalism", "E": "Skepticism"}}, {"Question #": "34", "Question": "Who is the creator of dialectics as a method of cognition?", "Correct Answer Letter": "E", "Correct Answer Text": "Hegel", "Options": {"A": "Descartes", "B": "Locke", "C": "Kant", "D": "Leibniz", "E": "Hegel"}}, {"Question #": "35", "Question": "The well-known statement of pragmatism:", "Correct Answer Letter": "B", "Correct Answer Text": "Truth is what is useful", "Options": {"A": "Truth is what is proven", "B": "Truth is what is useful", "C": "Truth is what is habitual", "D": "Truth is what is incomprehensible", "E": "All of the above"}}, {"Question #": "36", "Question": "The absolutization of the role and importance of sensory data in philosophy is associated with the direction of:", "Correct Answer Letter": "A", "Correct Answer Text": "Sensualism", "Options": {"A": "Sensualism", "B": "Realism", "C": "Rationalism", "D": "Skepticism", "E": "Agnosticism"}}, {"Question #": "37", "Question": "Which of the following belongs to a form of rational cognition?", "Correct Answer Letter": "B", "Correct Answer Text": "Concept", "Options": {"A": "Intuition", "B": "Concept", "C": "Conviction", "D": "Representation", "E": "Embodiment"}}, {"Question #": "38", "Question": "From the premise \"All people think\" and the statement justifying knowledge \"I am a person,\" make a conclusion:", "Correct Answer Letter": "D", "Correct Answer Text": "I think", "Options": {"A": "All people are like me", "B": "I belong to all people", "C": "Animals also think", "D": "I think", "E": "None of the above"}}, {"Question #": "1", "Question": "The sphere of philosophical knowledge about human being:", "Correct Answer Letter": "A", "Correct Answer Text": "anthropology", "Options": {"A": "anthropology", "B": "epistemology", "C": "axiology", "D": "ontology", "E": "logic"}}, {"Question #": "2", "Question": "Man is the measure of all things - believes:", "Correct Answer Letter": "B", "Correct Answer Text": "Protagoras", "Options": {"A": "Parmenides", "B": "Protagoras", "C": "Socrates", "D": "Democritus", "E": "Plato"}}, {"Question #": "3", "Question": "What does humanism mean?", "Correct Answer Letter": "A", "Correct Answer Text": "philanthropy", "Options": {"A": "philanthropy", "B": "love for god", "C": "love for knowledge", "D": "love of wisdom", "E": "love for truth"}}, {"Question #": "4", "Question": "Protagoras is the author of remark:", "Correct Answer Letter": "A", "Correct Answer Text": "man is the measure of all things", "Options": {"A": "man is the measure of all things", "B": "man is a social animal", "C": "man is a bizarre creature", "D": "man is a superman", "E": "man is a political animal"}}, {"Question #": "5", "Question": "Introduced the concept of \"borderline situation\" into philosophy:", "Correct Answer Letter": "C", "Correct Answer Text": "K.Jaspers", "Options": {"A": "J.-P. Sartre", "B": "A.Camus", "C": "K.Jaspers", "D": "G.Marcel", "E": "M.Heidegger"}}, {"Question #": "6", "Question": "Author of the work \"Existentialism is humanism\":", "Correct Answer Letter": "E", "Correct Answer Text": "J.-P. Sartre", "Options": {"A": "K. Jaspers", "B": "A. Camus", "C": "M. Heidegger", "D": "G.O. Marcel", "E": "J.-P. Sartre"}}, {"Question #": "7", "Question": "The statement \"If existence really precedes essence, then a person is responsible for what he is\" characterizes:", "Correct Answer Letter": "A", "Correct Answer Text": "Existentialism", "Options": {"A": "Existentialism", "B": "Psychoanalysis", "C": "Philosophy of life", "D": "Philosophical anthropology", "E": "Pragmatism"}}, {"Question #": "8", "Question": "A thinker whose ideas about man reflect the following judgment: \"Man is a wolf to man\":", "Correct Answer Letter": "A", "Correct Answer Text": "Hobbes", "Options": {"A": "Hobbes", "B": "Cusa", "C": "Pascal", "D": "Hegel", "E": "Kant"}}, {"Question #": "9", "Question": "The quality or character of a person or thing that makes them different from others is …:", "Correct Answer Letter": "A", "Correct Answer Text": "Individuality", "Options": {"A": "Individuality", "B": "Personality", "C": "Communication", "D": "Stereotype", "E": "There is no correct answer"}}, {"Question #": "10", "Question": "Confucius and Ming-tzu believed that human nature is:", "Correct Answer Letter": "E", "Correct Answer Text": "Inherently good", "Options": {"A": "Inherently evil", "B": "Initially fair", "C": "Initially moral", "D": "Initially beautiful", "E": "Inherently good"}}, {"Question #": "11", "Question": "The highest individual subjective principle in Ancient Indian Philosophy is:", "Correct Answer Letter": "B", "Correct Answer Text": "Atman", "Options": {"A": "Brahman", "B": "Atman", "C": "Samsara", "D": "Karma", "E": "Nirvana"}}, {"Question #": "12", "Question": "The statement \"If existence really precedes essence, then a person is responsible for what he is \" characterizes:", "Correct Answer Letter": "A", "Correct Answer Text": "existentialism", "Options": {"A": "existentialism", "B": "psychoanalysis", "C": "philosophy of life", "D": "philosophical anthropology", "E": "pragmatism"}}, {"Question #": "13", "Question": "The central problem of Confucianism is:", "Correct Answer Letter": "C", "Correct Answer Text": "Problems of man and society", "Options": {"A": "Problems of nature", "B": "Proofs of the existence of God", "C": "Problems of man and society", "D": "Problems of aesthetics", "E": "Immortality of the soul"}}, {"Question #": "14", "Question": "According to Al-Farabi, the most valuable quality in a person, and thus the means of approaching Allah, is:", "Correct Answer Letter": "D", "Correct Answer Text": "Reason", "Options": {"A": "Faith", "B": "Conscience", "C": "Love", "D": "Reason", "E": "Feeling"}}, {"Question #": "15", "Question": "One-dimensionality as a result of \"massification\" of humans is examined by:", "Correct Answer Letter": "A", "Correct Answer Text": "Herbert Marcuse", "Options": {"A": "Herbert Marcuse", "B": "Alvin Toffler", "C": "Arnold J. Toynbee", "D": "Karl Jaspers", "E": "Martin Heidegger"}}, {"Question #": "16", "Question": "In the work \"Answering the Question: What is Enlightenment?\" Immanuel Kant writes: \"Enlightenment is man's emergence from his self-imposed immaturity, in which he finds himself…", "Correct Answer Letter": "E", "Correct Answer Text": "by his own fault", "Options": {"A": "for a long time", "B": "since the Middle Ages", "C": "due to a poorly developed educational system", "D": "because of the imperfection of society", "E": "by his own fault"}}, {"Question #": "17", "Question": "The process of assimilation by an individual of patterns of behavior, psychological attitudes, social norms and values, knowledge, skills that allow him to function successfully in society is:", "Correct Answer Letter": "A", "Correct Answer Text": "Socialization", "Options": {"A": "Socialization", "B": "Adaptation", "C": "Anthropogenesis", "D": "Nihilism", "E": "Determinism"}}, {"Question #": "18", "Question": "The highest degree of beauty in man and society with its incomplete embodiment in reality:", "Correct Answer Letter": "B", "Correct Answer Text": "The aesthetic ideal", "Options": {"A": "Fiction", "B": "The aesthetic ideal", "C": "Artwork", "D": "The process of creation", "E": "The result of creation"}}, {"Question #": "19", "Question": "A thinker whose ideas about man reflect the following judgment: \"Man is a wolf to man\":", "Correct Answer Letter": "B", "Correct Answer Text": "Hobbes", "Options": {"A": "Spinosa", "B": "Hobbes", "C": "Pascal", "D": "Hegel", "E": "Kant"}}, {"Question #": "20", "Question": "Author by the famous book \"The Selfish Gene\"(1976):", "Correct Answer Letter": "C", "Correct Answer Text": "Richard Dawkins", "Options": {"A": "Ernest Rutherford", "B": "Immanuel Kant", "C": "Richard Dawkins", "D": "Albert Einstein", "E": "Isaac Newton"}}, {"Question #": "21", "Question": "Author of the work \"Existentialism is humanism\":", "Correct Answer Letter": "D", "Correct Answer Text": "J.-P. Sartre", "Options": {"A": "K. Jaspers", "B": "A. Camus", "C": "M. Heidegger", "D": "J.-P. Sartre", "E": "G.O. Marcel"}}, {"Question #": "22", "Question": "Existentialist J.-P. Sartre thought that person was condemned to:", "Correct Answer Letter": "A", "Correct Answer Text": "freedom", "Options": {"A": "freedom", "B": "happiness", "C": "suffering", "D": "love", "E": "death"}}, {"Question #": "23", "Question": "\"The war of every man against every man,\" or \"Man is a wolf to man.\" To whom does this thesis belong?", "Correct Answer Letter": "C", "Correct Answer Text": "Thomas Hobbes", "Options": {"A": "René Descartes", "B": "John Locke", "C": "Thomas Hobbes", "D": "Georg Wilhelm Friedrich Hegel", "E": "Gottfried Wilhelm Leibniz"}}, {"Question #": "24", "Question": "The basis of existentialism is the doctrine of:", "Correct Answer Letter": "C", "Correct Answer Text": "Human existence", "Options": {"A": "The values of human society", "B": "The laws of the objective world", "C": "Human existence", "D": "Social progress", "E": "The methods of cognition"}}, {"Question #": "25", "Question": "The fundamental concept in the philosophy of Friedrich Nietzsche is:", "Correct Answer Letter": "B", "Correct Answer Text": "Will to power", "Options": {"A": "Will to life", "B": "Will to power", "C": "Will to wealth", "D": "Will to God", "E": "Will to knowledge"}}, {"Question #": "26", "Question": "Existentialists assert that the essence of a person is defined by:", "Correct Answer Letter": "D", "Correct Answer Text": "The individual’s own choice of their goal", "Options": {"A": "An incomprehensible fate", "B": "The totality of production relations", "C": "Divine predestination", "D": "The individual’s own choice of their goal", "E": "Aesthetic pleasure"}}, {"Question #": "27", "Question": "Medieval philosophers argued that man:", "Correct Answer Letter": "B", "Correct Answer Text": "Is created in the image and likeness of God", "Options": {"A": "Is the result of biological evolution", "B": "Is created in the image and likeness of God", "C": "Is a product of social reality", "D": "Is a product of speech activity", "E": "Is a political animal"}}, {"Question #": "28", "Question": "This quality in a person was considered the most important in the philosophy of the Modern era:", "Correct Answer Letter": "C", "Correct Answer Text": "Reason, rationality", "Options": {"A": "Emotionality", "B": "Piety", "C": "Reason, rationality", "D": "Creativity", "E": "Sense of the beautiful"}}, {"Question #": "29", "Question": "The life position based on the principle \"The meaning of life is in serving people\" is called:", "Correct Answer Letter": "A", "Correct Answer Text": "Altruism", "Options": {"A": "Altruism", "B": "Egoism", "C": "Hedonism", "D": "Asceticism", "E": "Eudaimonism"}}, {"Question #": "1", "Question": "The ethical concept of Confucianism, identifying the positive qualities of a person:", "Correct Answer Letter": "A", "Correct Answer Text": "a noble person", "Options": {"A": "a noble person", "B": "short man", "C": "an official", "D": "warlord", "E": "statesman"}}, {"Question #": "2", "Question": "A trait or quality that is deemed morally good and thus is valued as the basis of good moral being:", "Correct Answer Letter": "A", "Correct Answer Text": "virtue", "Options": {"A": "virtue", "B": "dignity", "C": "charity", "D": "prudence", "E": "justice"}}, {"Question #": "3", "Question": "Thinker who reasoned that utility is equal to happiness and the ultimate goal is to find \"the greatest amount of good for the greatest number of people\":", "Correct Answer Letter": "A", "Correct Answer Text": "J. Bentham", "Options": {"A": "J. Bentham", "B": "J.S. Mill", "C": "I. Kant", "D": "Ch.S. Peirce", "E": "J. Habermas"}}, {"Question #": "4", "Question": "The English word \"ethics\" is derived from the ancient Greek word ēthikós, meaning:", "Correct Answer Letter": "A", "Correct Answer Text": "relating to one's character", "Options": {"A": "relating to one's character", "B": "establishing moral order", "C": "elimination of evil", "D": "compliance with the moral rules", "E": "purposeful life"}}, {"Question #": "5", "Question": "The author of the dictum: \"It is impossible to think of anything at all in the world, or indeed even beyond it, that could be considered good without limitation except a good will.\":", "Correct Answer Letter": "A", "Correct Answer Text": "Kant", "Options": {"A": "Kant", "B": "Schopenhauer", "C": "Abay", "D": "Spinoza", "E": "Augustine"}}, {"Question #": "6", "Question": "“Nothing is morally right or wrong because there are no moral features in this world; thus, no moral judgments are true”:", "Correct Answer Letter": "A", "Correct Answer Text": "moral nihilism", "Options": {"A": "moral nihilism", "B": "moral relativism", "C": "moral objectivism", "D": "moral ignorance", "E": "moral eliminativism"}}, {"Question #": "7", "Question": "Impartial and just treatment or behavior without favoritism or discrimination:", "Correct Answer Letter": "A", "Correct Answer Text": "fairness", "Options": {"A": "fairness", "B": "straightforwardness", "C": "rigidity", "D": "humbleness", "E": "tolerance"}}, {"Question #": "8", "Question": "A class of meta-ethical theories in which all members entail that no one has any moral knowledge, more over it is impossible:", "Correct Answer Letter": "A", "Correct Answer Text": "moral skepticism", "Options": {"A": "moral skepticism", "B": "moral nihilism", "C": "moral absenteeism", "D": "ethical realism", "E": "agnosticism"}}, {"Question #": "9", "Question": "Moral law: \"Act so that people and humanity have always been only a goal but not a means\" is called:", "Correct Answer Letter": "A", "Correct Answer Text": "Kant's categorical imperative", "Options": {"A": "Kant's categorical imperative", "B": "Kant’s hypothetical imperative", "C": "Schweitzer’s ethics of reverence for life", "D": "Buddhist ethics of compassion", "E": "Feuerbach’s anthropological materialism"}}, {"Question #": "10", "Question": "Who said \"Two things always fill the soul with new and ever stronger wonder - this is the Starry Sky above Me and the Moral Law in Me\":", "Correct Answer Letter": "A", "Correct Answer Text": "Kant", "Options": {"A": "Kant", "B": "Socrates", "C": "Aristotle", "D": "Plato", "E": "Nietzsche"}}, {"Question #": "11", "Question": "Who said “Educating the mind without educating the heart is no education at all”:", "Correct Answer Letter": "A", "Correct Answer Text": "Aristotle", "Options": {"A": "Aristotle", "B": "Thales", "C": "Plato", "D": "Descartes", "E": "Socrates"}}, {"Question #": "12", "Question": "The idea of \"revaluation of all values\" came up with:", "Correct Answer Letter": "C", "Correct Answer Text": "F. Nietzsche", "Options": {"A": "A. Schweitzer", "B": "I. Kant", "C": "F. Nietzsche", "D": "W. Windelband", "E": "G. Hegel"}}, {"Question #": "13", "Question": "In Spinoza's philosophy, the theory of knowledge that leads to freedom is:", "Correct Answer Letter": "E", "Correct Answer Text": "Ethics", "Options": {"A": "Logic", "B": "Mathematics", "C": "Politics", "D": "Aesthetics", "E": "Ethics"}}, {"Question #": "14", "Question": "The highest level of value consciousness:", "Correct Answer Letter": "C", "Correct Answer Text": "Ideals", "Options": {"A": "Norms", "B": "Traditions", "C": "Ideals", "D": "Spiritual values", "E": "Habits"}}, {"Question #": "15", "Question": "According to Nietzsche, there are no transcendental ethics or values for us to use, so:", "Correct Answer Letter": "E", "Correct Answer Text": "We must create our own values", "Options": {"A": "We must live in transcendental world", "B": "We must destroy everything", "C": "We must live its imagine form", "D": "We must live in absurdity", "E": "We must create our own values"}}, {"Question #": "16", "Question": "The primary ethical principles of Daoism are:", "Correct Answer Letter": "A", "Correct Answer Text": "the principles of non-action and spontaneity", "Options": {"A": "the principles of non-action and spontaneity", "B": "the principles of moral anarchism and inaction", "C": "the principles of non-violence and forgiveness", "D": "the principles of individualism and hedonism", "E": "the principles of moral anarchism and hedonism"}}, {"Question #": "17", "Question": "Which philosopher first considered morality as an independent sphere?", "Correct Answer Letter": "A", "Correct Answer Text": "Immanuel Kant", "Options": {"A": "Immanuel Kant", "B": "David Hume", "C": "Georg Wilhelm Friedrich Hegel", "D": "Gottfried Wilhelm Leibniz", "E": "Auguste Comte"}}, {"Question #": "18", "Question": "Thinker, who linked the origin of capitalism with the protestant ethics:", "Correct Answer Letter": "B", "Correct Answer Text": "M. Weber", "Options": {"A": "A. Comte", "B": "M. Weber", "C": "T. Kuhn", "D": "M. Foucault", "E": "I. Kant"}}, {"Question #": "19", "Question": "Meaning of Taoist principle \"Wu-wei\":", "Correct Answer Letter": "D", "Correct Answer Text": "Non-action", "Options": {"A": "Non-resistance to evil", "B": "Action", "C": "Discipline and order in society", "D": "Non-action", "E": "Infinity of the Universe"}}, {"Question #": "20", "Question": "The main principle of Jainism, the non-harming of living beings (the principle of \"do no harm\"), is called:", "Correct Answer Letter": "C", "Correct Answer Text": "Ahimsa", "Options": {"A": "Atman", "B": "Moksha", "C": "Ahimsa", "D": "Jiva", "E": "Jina"}}, {"Question #": "21", "Question": "“I do not agree with what you have to say, but I’ll defend to the death your right to say it”, said:", "Correct Answer Letter": "E", "Correct Answer Text": "Voltaire", "Options": {"A": "Cicero", "B": "Abai", "C": "Aristotle", "D": "Socrates", "E": "Voltaire"}}, {"Question #": "22", "Question": "Those who called themselves \"citizens of the world\" and introduced the term \"cosmopolitan\" were:", "Correct Answer Letter": "C", "Correct Answer Text": "Cynics", "Options": {"A": "Sophists", "B": "Cyrenaics", "C": "Cynics", "D": "Megarians", "E": "Stoics"}}, {"Question #": "23", "Question": "The denial of fate in Chinese philosophy, asserting that people are free, is found in:", "Correct Answer Letter": "A", "Correct Answer Text": "Confucians", "Options": {"A": "Confucians", "B": "Daoists", "C": "Mohists", "D": "Legalists", "E": "Naturalists"}}, {"Question #": "24", "Question": "In \"The Spirit of the Laws,\" Charles de Montesquieu developed:", "Correct Answer Letter": "D", "Correct Answer Text": "Locke's theory of natural law", "Options": {"A": "Leibniz's doctrine of monads", "B": "Descartes' doctrine of innate ideas", "C": "Bacon's empiricism", "D": "Locke's theory of natural law", "E": "Copernicus' heliocentrism"}}, {"Question #": "25", "Question": "According to B. Spinoza, everything in the world is governed by:", "Correct Answer Letter": "A", "Correct Answer Text": "Absolute necessity", "Options": {"A": "Absolute necessity", "B": "Man will and power", "C": "The world soul", "D": "The objective laws of nature", "E": "God the demiurge"}}, {"Question #": "26", "Question": "The position of Niccolò Machiavelli can be expressed by the formula:", "Correct Answer Letter": "B", "Correct Answer Text": "\"politics for the monarch\"", "Options": {"A": "\"politics for politics\"", "B": "\"politics for the monarch\"", "C": "\"politics for the common people\"", "D": "\"politics for religion\"", "E": "\"politics for art\""}}, {"Question #": "27", "Question": "Locke, in his socio-political theory, puts forward four \"natural rights\" of every citizen. Which of the following is NOT included:", "Correct Answer Letter": "D", "Correct Answer Text": "right to vote and be elected", "Options": {"A": "right to life", "B": "right to liberty", "C": "right to property", "D": "right to vote and be elected", "E": "right to defend one's rights"}}, {"Question #": "28", "Question": "Analyses and develops the theory of the separation of powers (legislative, executive and judicial) as a pillar of the theory of the rule of law and the practice of democratic life -", "Correct Answer Letter": "E", "Correct Answer Text": "Montesquieu", "Options": {"A": "Diderot", "B": "Rousseau", "C": "Voltaire", "D": "Holbach", "E": "Montesquieu"}}, {"Question #": "29", "Question": "\"Man is born free, and yet everywhere he is in fetters\" - these are the words with which Rousseau's treatise opens:", "Correct Answer Letter": "D", "Correct Answer Text": "\"On the Social Contract\"", "Options": {"A": "\"Discourse on the Freedom of Thought\"", "B": "\"Philosophical Inquiry into Human Freedom\"", "C": "\"Fifteen Sermons on Human Nature\"", "D": "\"On the Social Contract\"", "E": "\"Thoughts on Various Subjects\""}}, {"Question #": "30", "Question": "In his work \"On the Spirit of Laws\", S. Montesquieu developed:", "Correct Answer Letter": "D", "Correct Answer Text": "Locke's theory of natural law", "Options": {"A": "The doctrine of Leibniz's monads", "B": "The doctrine of Descartes' innate ideas", "C": "Francis Bacon's empiricism", "D": "Locke's theory of natural law", "E": "Copernicus' heliocentrism"}}, {"Question #": "31", "Question": "A Renaissance thinker who believed that a ruler should combine the qualities of a lion and a fox:", "Correct Answer Letter": "E", "Correct Answer Text": "Machiavelli", "Options": {"A": "Campanella", "B": "More", "C": "Petrarch", "D": "Bruno", "E": "Machiavelli"}}, {"Question #": "32", "Question": "According to Kant, what makes a person free?", "Correct Answer Letter": "B", "Correct Answer Text": "Following duty", "Options": {"A": "Following one's nature", "B": "Following duty", "C": "Adequate cognition", "D": "Following religious norms", "E": "The principle of utilitarianism"}}, {"Question #": "33", "Question": "\"Everything in the world is predestined, man is absolutely not free,\" are the views of:", "Correct Answer Letter": "B", "Correct Answer Text": "Fatalism", "Options": {"A": "Irrationalism", "B": "Fatalism", "C": "Voluntarism", "D": "Rationalism", "E": "Sensualism"}}, {"Question #": "34", "Question": "The meaning of human life according to eudaimonism is:", "Correct Answer Letter": "A", "Correct Answer Text": "Freedom from physical suffering and mental distress", "Options": {"A": "Freedom from physical suffering and mental distress", "B": "The struggle against tyranny", "C": "Serving God", "D": "Committing heroic deeds", "E": "Cognitive development"}}, {"Question #": "1", "Question": "The science on forms, laws and ways of thinking:", "Correct Answer Letter": "A", "Correct Answer Text": "logic", "Options": {"A": "logic", "B": "axiology", "C": "ontology", "D": "epistemology", "E": "logistics"}}, {"Question #": "2", "Question": "The form of empirical cognition:", "Correct Answer Letter": "C", "Correct Answer Text": "observation", "Options": {"A": "judgment", "B": "hypothesis", "C": "observation", "D": "syllogism", "E": "theory"}}, {"Question #": "3", "Question": "The concept used in the logic and methodology of science to denote the process of establishing the truth of scientific statements as a result of their empirical experience:", "Correct Answer Letter": "E", "Correct Answer Text": "Verification", "Options": {"A": "Hypothesis", "B": "The concept", "C": "Falsification", "D": "Demarcation", "E": "Verification"}}, {"Question #": "4", "Question": "The main task of philosophy is the construction of a new method of science, believed:", "Correct Answer Letter": "C", "Correct Answer Text": "Francis Bacon", "Options": {"A": "Socrates", "B": "Rene Descartes", "C": "Francis Bacon", "D": "Georg Hegel", "E": "Aristotle"}}, {"Question #": "5", "Question": "The philosopher who formulated 4 methodological rules:", "Correct Answer Letter": "B", "Correct Answer Text": "Rene Descartes", "Options": {"A": "Socrates", "B": "Rene Descartes", "C": "Francis Bacon", "D": "Georg Hegel", "E": "Aristotle"}}, {"Question #": "6", "Question": "A philosophical method based on the principles of interpretation of any texts or systems of concepts:", "Correct Answer Letter": "C", "Correct Answer Text": "Hermeneutics", "Options": {"A": "Maieutics", "B": "Dialectics", "C": "Hermeneutics", "D": "Eclectic", "E": "Sophistry"}}, {"Question #": "7", "Question": "The founder of the experimental mathematical methods of nature research:", "Correct Answer Letter": "A", "Correct Answer Text": "Galileo Galilei", "Options": {"A": "Galileo Galilei", "B": "Nicolas Copernicus", "C": "Leonardo da Vinci", "D": "Thomas Moore", "E": "Niccolo Machiavelli"}}, {"Question #": "8", "Question": "The influence of philosophy on XVII century Modern science is the creation of two most important philosophical and methodological concepts:", "Correct Answer Letter": "B", "Correct Answer Text": "Rationalism and Empiricism", "Options": {"A": "Modernism and Postmodernism", "B": "Rationalism and Empiricism", "C": "Sensualism and Empiricism", "D": "Personalism and Pragmatism", "E": "Existentialism and Philosophy of life"}}, {"Question #": "9", "Question": "The main function of science is:", "Correct Answer Letter": "A", "Correct Answer Text": "The search and production of new knowledge", "Options": {"A": "The search and production of new knowledge", "B": "The education of people", "C": "Cultural development of society", "D": "Technological development and improvement of life style", "E": "Social justice and harmony"}}, {"Question #": "10", "Question": "The main purpose of science is:", "Correct Answer Letter": "B", "Correct Answer Text": "Achieve the truth", "Options": {"A": "Make a discovery", "B": "Achieve the truth", "C": "Do experiments", "D": "Explore nature", "E": "Create theories"}}, {"Question #": "11", "Question": "The philosopher who introduced the concepts of “normal science” and “paradigm shift”:", "Correct Answer Letter": "D", "Correct Answer Text": "T. Kuhn", "Options": {"A": "I. Lakatos", "B": "P. Feyerabend", "C": "A. Comte", "D": "T. Kuhn", "E": "L. Wittgenstein"}}, {"Question #": "12", "Question": "The practical value of science is as follows:", "Correct Answer Letter": "D", "Correct Answer Text": "To bring benefits to humanity", "Options": {"A": "Do experiments", "B": "Explore nature", "C": "Make a discovery", "D": "To bring benefits to humanity", "E": "Create theories"}}, {"Question #": "13", "Question": "The prerequisites of the experimental method were obtained in the era of:", "Correct Answer Letter": "C", "Correct Answer Text": "Renaissance", "Options": {"A": "Antiquity", "B": "the Middle Ages", "C": "Renaissance", "D": "Modern Times", "E": "Postmodern"}}, {"Question #": "14", "Question": "The principle of falsification was introduced into scientific circulation by:", "Correct Answer Letter": "E", "Correct Answer Text": "K. Popper", "Options": {"A": "J. Derrida", "B": "A. Camus", "C": "K. Jaspers", "D": "T. Kuhn", "E": "K. Popper"}}, {"Question #": "15", "Question": "The set of beliefs, values, technical means adopted by the scientific community and providing a scientific tradition:", "Correct Answer Letter": "A", "Correct Answer Text": "scientific paradigms", "Options": {"A": "scientific paradigms", "B": "scientific theories", "C": "scientific schemes", "D": "Scientific revolutions", "E": "scientific experiments"}}, {"Question #": "16", "Question": "The work \"The structure of scientific revolutions\" was written by postpositivist:", "Correct Answer Letter": "D", "Correct Answer Text": "T. Kuhn", "Options": {"A": "K. Popper", "B": "T. Adorno", "C": "J. Habermas", "D": "T. Kuhn", "E": "L. Wittgenstein"}}, {"Question #": "17", "Question": "This philosopher and scientist told about the hypertrophied development of science:", "Correct Answer Letter": "D", "Correct Answer Text": "Bertrand Russell", "Options": {"A": "Ernest Rutherford", "B": "Richard Dawkins", "C": "Isaak Newton", "D": "Bertrand Russell", "E": "Gottfried Leibniz"}}, {"Question #": "18", "Question": "What principle is opposite to verification?:", "Correct Answer Letter": "A", "Correct Answer Text": "falsification", "Options": {"A": "falsification", "B": "simulation", "C": "stimulation", "D": "regeneration", "E": "generalization"}}, {"Question #": "19", "Question": "The conclusion of the 14th-century scholastic philosopher William of Ockham about the necessity to separate ethical-theological problems from philosophical ones is called:", "Correct Answer Letter": "B", "Correct Answer Text": "\"Ockham's razor\"", "Options": {"A": "\"Ockham's boundary\"", "B": "\"Ockham's razor\"", "C": "\"Ockham's knife\"", "D": "\"Ockham's scissors\"", "E": "\"Ockham's blade\""}}, {"Question #": "20", "Question": "Descartes calls the study of God, the soul, and the beginnings of perfect knowledge:", "Correct Answer Letter": "C", "Correct Answer Text": "Metaphysics", "Options": {"A": "Theology", "B": "Teleology", "C": "Metaphysics", "D": "Physics", "E": "Ethics"}}, {"Question #": "21", "Question": "The three stages in the history of humanity (religious, metaphysical, positive or scientific) were distinguished by:", "Correct Answer Letter": "A", "Correct Answer Text": "Auguste Comte", "Options": {"A": "Auguste Comte", "B": "Karl Marx", "C": "Immanuel Kant", "D": "Friedrich Engels", "E": "Søren Kierkegaard"}}, {"Question #": "22", "Question": "Technology as a means of understanding, revealing truth changes the perception of nature by humans, according to:", "Correct Answer Letter": "C", "Correct Answer Text": "Martin Heidegger", "Options": {"A": "Herbert Marcuse", "B": "Alvin Toffler", "C": "Martin Heidegger", "D": "Arnold J. Toynbee", "E": "Karl Jaspers"}}, {"Question #": "23", "Question": "The idea of \"technocracy\" as the rule of engineers was initially developed by:", "Correct Answer Letter": "A", "Correct Answer Text": "Thorstein Veblen", "Options": {"A": "Thorstein Veblen", "B": "Max Weber", "C": "Karl Marx", "D": "Herbert Marcuse", "E": "José Ortega y Gasset"}}, {"Question #": "24", "Question": "The \"myth of the machine,\" that is, the idea that mega-technology is unavoidable in our lives and is highly beneficial, was debunked by:", "Correct Answer Letter": "B", "Correct Answer Text": "Lewis Mumford", "Options": {"A": "Zbigniew Brzezinski", "B": "Lewis Mumford", "C": "Daniel Bell", "D": "Walt Whitman Rostow", "E": "Jacques Ellul"}}, {"Question #": "25", "Question": "The statement that the biological laws of the struggle for existence and natural selection operate in the social sphere is characteristic of:", "Correct Answer Letter": "D", "Correct Answer Text": "Darwinism", "Options": {"A": "Freudian", "B": "Positivism", "C": "Marxism", "D": "Darwinism", "E": "Creationism"}}, {"Question #": "26", "Question": "Founder of sociology as a positive science:", "Correct Answer Letter": "B", "Correct Answer Text": "O. Comte", "Options": {"A": "M. Weber", "B": "O. Comte", "C": "K. Marx", "D": "G. Hegel", "E": "I. Kant"}}, {"Question #": "27", "Question": "\"All sciences are divided into physics and stamp collecting\", - said:", "Correct Answer Letter": "A", "Correct Answer Text": "Ernest Rutherford", "Options": {"A": "Ernest Rutherford", "B": "Richard Dawkins", "C": "Immanuel Kant", "D": "Albert Einstein", "E": "Isaac Newton"}}, {"Question #": "28", "Question": "\"The book of nature is written in the language of mathematics,“ - argued:", "Correct Answer Letter": "B", "Correct Answer Text": "Galileo", "Options": {"A": "Copernicus", "B": "Galileo", "C": "Bacon", "D": "Descartes", "E": "Newton"}}, {"Question #": "29", "Question": "\"There is as much truth in every knowledge as there is mathematics”, - believed:", "Correct Answer Letter": "C", "Correct Answer Text": "Kant", "Options": {"A": "Copernicus", "B": "Galileo", "C": "Kant", "D": "Descartes", "E": "Newton"}}, {"Question #": "30", "Question": "A system of philosophy that recognize only things that can be scientifically or logically proved is:", "Correct Answer Letter": "D", "Correct Answer Text": "Positivism", "Options": {"A": "Romanticism", "B": "Existentialism", "C": "Nihilism", "D": "Positivism", "E": "There is no correct answer"}}, {"Question #": "31", "Question": "Aristotle divided the Sciences into three group:", "Correct Answer Letter": "E", "Correct Answer Text": "Theoretical, practical and poetic", "Options": {"A": "Theoretical, practical and rational", "B": "Theoretical, practical and cultural", "C": "Theoretical, practical and ethical", "D": "Theoretical, practical and empirical", "E": "Theoretical, practical and poetic"}}, {"Question #": "32", "Question": "Author by the famous “Mathematical Principles of Natural Philosophy”:", "Correct Answer Letter": "C", "Correct Answer Text": "Isaac Newton", "Options": {"A": "Francis Bacon", "B": "Gottfried Leibniz", "C": "Isaac Newton", "D": "Benedict Spinoza", "E": "Rene Descartes"}}, {"Question #": "33", "Question": "Author of concept of the scientific knowledge model:", "Correct Answer Letter": "A", "Correct Answer Text": "I. Lakatos", "Options": {"A": "I. Lakatos", "B": "G. Leibniz", "C": "J. Fichte", "D": "G. Hegel", "E": "A. Schopenhauer"}}, {"Question #": "34", "Question": "Author of the mechanical scientific vision of the world:", "Correct Answer Letter": "A", "Correct Answer Text": "Isaac Newton", "Options": {"A": "Isaac Newton", "B": "Gottfried Leibniz", "C": "Benedict Spinoza", "D": "Rene Descartes", "E": "Francis Bacon"}}, {"Question #": "35", "Question": "From the point of view of externalism, the emergence of science is due to:", "Correct Answer Letter": "E", "Correct Answer Text": "All of the above", "Options": {"A": "External circumstances", "B": "Social environment", "C": "Economic situation", "D": "Political power", "E": "All of the above"}}, {"Question #": "36", "Question": "In the philosophy of science, the problem of distinguishing the science and non-science:", "Correct Answer Letter": "D", "Correct Answer Text": "demarcation", "Options": {"A": "falsification", "B": "verification", "C": "proliferation", "D": "demarcation", "E": "negative heuristics"}}, {"Question #": "37", "Question": "Leonardo da Vinci was not only a great artist, but also:", "Correct Answer Letter": "E", "Correct Answer Text": "All of the above", "Options": {"A": "A great inventor", "B": "A scientist", "C": "An engineer", "D": "A writer", "E": "All of the above"}}, {"Question #": "38", "Question": "Philosophers, close towards internalism are:", "Correct Answer Letter": "E", "Correct Answer Text": "All of the above", "Options": {"A": "Descartes", "B": "Hegel", "C": "Popper", "D": "Husserl", "E": "All of the above"}}, {"Question #": "39", "Question": "The application of knowledge to reach practical goals in a reproducible way and also the product of such an endeavor:", "Correct Answer Letter": "A", "Correct Answer Text": "technology", "Options": {"A": "technology", "B": "production", "C": "reproduction", "D": "quantification", "E": "qualification"}}, {"Question #": "40", "Question": "The author of the Concept of Personal Knowledge is:", "Correct Answer Letter": "C", "Correct Answer Text": "Michael Polanyi", "Options": {"A": "Ernest Rutherford", "B": "Richard Dawkins", "C": "Michael Polanyi", "D": "Bertrand Russell", "E": "Isaak Newton"}}, {"Question #": "41", "Question": "The author of the famous treatise of the Middle Ages \"Canon of medical science\":", "Correct Answer Letter": "B", "Correct Answer Text": "Ibn Sina", "Options": {"A": "Al-Kindi", "B": "Ibn Sina", "C": "Al-Farabi", "D": "Ibn Khaldun", "E": "Al-Ghazali"}}, {"Question #": "42", "Question": "The author of the term \"paradigm\":", "Correct Answer Letter": "A", "Correct Answer Text": "Thomas Kuhn", "Options": {"A": "Thomas Kuhn", "B": "Erich Fromm", "C": "Sigmund Freud", "D": "Bertrand Russell", "E": "Imre Lakatos"}}, {"Question #": "1", "Question": "In Hellenistic philosophy the word “ataraxia” means:", "Correct Answer Letter": "A", "Correct Answer Text": "equanimity, impassivity", "Options": {"A": "equanimity, impassivity", "B": "heartlessness", "C": "fatigue, tiredness", "D": "wisdom", "E": "activity and creativity"}}, {"Question #": "2", "Question": "The ability to create mental pictures is called…:", "Correct Answer Letter": "A", "Correct Answer Text": "imagination", "Options": {"A": "imagination", "B": "perception", "C": "reflection", "D": "consciousness", "E": "will"}}, {"Question #": "3", "Question": "The purification and purgation of emotions through dramatic art, or any extreme emotional state that results in renewal and restoration:", "Correct Answer Letter": "A", "Correct Answer Text": "catharsis", "Options": {"A": "catharsis", "B": "catalepsy", "C": "ataraxy", "D": "mimesis", "E": "phronesis"}}, {"Question #": "4", "Question": "Who said: \"There is beauty in everything, but not everyone will see?\":", "Correct Answer Letter": "D", "Correct Answer Text": "Confucius", "Options": {"A": "Democritus", "B": "Socrates", "C": "Thales", "D": "Confucius", "E": "Heraclitus"}}, {"Question #": "5", "Question": "The author of \"The Great Book of Music\" is:", "Correct Answer Letter": "C", "Correct Answer Text": "Al-Farabi", "Options": {"A": "Ibn Rushd", "B": "Ibn Sina", "C": "Al-Farabi", "D": "Ibn Arabi", "E": "Al-Ghazali"}}, {"Question #": "6", "Question": "Kant considers artistic creativity, the problem of aesthetics, in the work:", "Correct Answer Letter": "C", "Correct Answer Text": "\"Critique of Judgment\"", "Options": {"A": "\"Critique of Practical Reason\"", "B": "\"Critique of Pure Reason\"", "C": "\"Critique of Judgment\"", "D": "\"Groundwork of the Metaphysics of Morals\"", "E": "\"Dreams of a Spirit-Seer, Illustrated by Dreams of Metaphysics\""}}, {"Question #": "7", "Question": "Dionysian and Apollonian elements in culture are distinguished by:", "Correct Answer Letter": "D", "Correct Answer Text": "Friedrich Nietzsche", "Options": {"A": "Arthur Schopenhauer", "B": "Søren Kierkegaard", "C": "Albert Camus", "D": "Friedrich Nietzsche", "E": "Martin Heidegger"}}, {"Question #": "8", "Question": "The totality of the main ideological and artistic features of the artist's work, manifested in typical themes, ideas, characters, conflicts, in the originality of visual and expressive means, artistic techniques, is called:", "Correct Answer Letter": "C", "Correct Answer Text": "Artist's style", "Options": {"A": "Artistic creativity", "B": "Artistic work", "C": "Artist's style", "D": "Artist’s imagination", "E": "Artist's worldview"}}, {"Question #": "9", "Question": "In art, the assessment of the depicted phenomenon is given in accordance with:", "Correct Answer Letter": "C", "Correct Answer Text": "The artist's worldview", "Options": {"A": "The value orientations of society as a whole", "B": "The concepts of it in a given cultural environment", "C": "The artist's worldview", "D": "The artist’s imagination", "E": "The artistic creativity"}}, {"Question #": "10", "Question": "A sign of the artistry of a particular work can only be:", "Correct Answer Letter": "B", "Correct Answer Text": "System of criteria", "Options": {"A": "Reason", "B": "System of criteria", "C": "Theory of art", "D": "Ideal", "E": "Experience"}}, {"Question #": "11", "Question": "Art, according to Schiller, should depict:", "Correct Answer Letter": "A", "Correct Answer Text": "The moral", "Options": {"A": "The moral", "B": "Sensuous", "C": "Supersensible", "D": "Experience", "E": "Reality"}}, {"Question #": "12", "Question": "Historically established forms of art, its main structural and classification units are called:", "Correct Answer Letter": "B", "Correct Answer Text": "Types of art", "Options": {"A": "Elements of art", "B": "Types of art", "C": "Methods of art", "D": "Signs of art", "E": "Properties of art"}}, {"Question #": "13", "Question": "The Lumiere brothers are the founders of:", "Correct Answer Letter": "D", "Correct Answer Text": "Cinematography", "Options": {"A": "Modernism", "B": "Postmodernism", "C": "Abstractionism", "D": "Cinematography", "E": "Photography"}}, {"Question #": "14", "Question": "Antonio Gaudi is a famous …:", "Correct Answer Letter": "D", "Correct Answer Text": "Spanish architect", "Options": {"A": "American director", "B": "English scientist", "C": "Italian sculptor", "D": "Spanish architect", "E": "Argentine artist"}}, {"Question #": "15", "Question": "Which museum houses Raphael's famous painting \"Sistine Madonna\"?:", "Correct Answer Letter": "B", "Correct Answer Text": "At the Old Masters Gallery in Dresden", "Options": {"A": "In the Louvre in Paris", "B": "At the Old Masters Gallery in Dresden", "C": "At the National Gallery in London", "D": "At the Hermitage Museum in St. Petersburg", "E": "The Uffizi Gallery in Florence"}}, {"Question #": "16", "Question": "Who compiled the \"Biographies of the most famous painters, sculptors and architects\"?:", "Correct Answer Letter": "C", "Correct Answer Text": "Giorgio Vasari", "Options": {"A": "Michelangelo", "B": "Leonardo da Vinci", "C": "Giorgio Vasari", "D": "Andrea del Verrocchio", "E": "Rafael Santi"}}, {"Question #": "17", "Question": "Which Renaissance artist is considered a harbinger of surrealism?:", "Correct Answer Letter": "D", "Correct Answer Text": "Hieronymus Bosch", "Options": {"A": "Jaan van Eyck", "B": "Leonardo da Vinci", "C": "Albrecht Durer", "D": "Hieronymus Bosch", "E": "Peter Brueghel the Elder"}}, {"Question #": "18", "Question": "The function of art that fosters artistic tastes:", "Correct Answer Letter": "E", "Correct Answer Text": "Aesthetic", "Options": {"A": "Cognitive", "B": "Communicative", "C": "Value-oriented", "D": "Moral", "E": "Aesthetic"}}, {"Question #": "19", "Question": "Classification of art forms according to F. Schelling in “The Philosophy of Art”:", "Correct Answer Letter": "C", "Correct Answer Text": "Real and Ideal", "Options": {"A": "Rare and Common", "B": "Simple and Complex", "C": "Real and Ideal", "D": "Open and Closed", "E": "Absolute and Relative"}}, {"Question #": "20", "Question": "The emergence of mass culture was associated with:", "Correct Answer Letter": "A", "Correct Answer Text": "The rapid development of industry", "Options": {"A": "The rapid development of industry", "B": "The development of new territories", "C": "The advent of the Internet", "D": "An increase in the level of education", "E": "The discovery of new lands"}}, {"Question #": "21", "Question": "A utilitarian and practical approach to life in art:", "Correct Answer Letter": "C", "Correct Answer Text": "Leads to the loss of the specificity of art", "Options": {"A": "Creates an artistic image", "B": "Promotes the knowledge of the essence of the aesthetic", "C": "Leads to the loss of the specificity of art", "D": "Provides the basis for creating the beautiful", "E": "Contrasts the beautiful and the ugly"}}, {"Question #": "22", "Question": "In relation to the sublime in art, man is:", "Correct Answer Letter": "D", "Correct Answer Text": "Free", "Options": {"A": "Not free", "B": "Subordinated", "C": "Alienated", "D": "Free", "E": "Neutral"}}, {"Question #": "23", "Question": "An adequate reflection of reality in art, a deep disclosure of the essence of the depicted phenomena from the standpoint of aesthetic ideals is called:", "Correct Answer Letter": "A", "Correct Answer Text": "Artistic truth", "Options": {"A": "Artistic truth", "B": "Copying", "C": "Plagiarism", "D": "Separation from reality", "E": "Fiction"}}, {"Question #": "24", "Question": "The integrity of aesthetic consciousness, the organic unification of concepts, sensual images, emotions, and volitional aspirations in it make it an indispensable way:", "Correct Answer Letter": "C", "Correct Answer Text": "Cognition of reality", "Options": {"A": "Creation of works of art", "B": "Transformation of reality", "C": "Cognition of reality", "D": "Anticipation of the future", "E": "Descriptions of reality"}}, {"Question #": "25", "Question": "Reality in its aesthetic richness, in its universal value, refracted through the personality of the artist, appears as:", "Correct Answer Letter": "C", "Correct Answer Text": "The subject of art", "Options": {"A": "The basis of religion", "B": "The subject of knowledge", "C": "The subject of art", "D": "The subject of science", "E": "Fiction"}}, {"Question #": "26", "Question": "The highest degree of beauty in man and society with its incomplete embodiment in reality:", "Correct Answer Letter": "B", "Correct Answer Text": "The aesthetic ideal", "Options": {"A": "Fiction", "B": "The aesthetic ideal", "C": "Artwork", "D": "The process of creation", "E": "The result of creation"}}, {"Question #": "27", "Question": "The associative process, in which not the natural laws of the development of a phenomenon are revealed, but its connections with a person, its significance for a person, is called:", "Correct Answer Letter": "D", "Correct Answer Text": "Artistic knowledge", "Options": {"A": "Abstract cognition", "B": "Logical thinking", "C": "Scientific cognition", "D": "Artistic knowledge", "E": "Religion knowledge"}}, {"Question #": "28", "Question": "In the process of creation by primitive man of images necessary for the transmission of ideas about reality, they are formed:", "Correct Answer Letter": "A", "Correct Answer Text": "Painting, graphics and sculpture", "Options": {"A": "Painting, graphics and sculpture", "B": "Literature and poetry", "C": "Writing and science", "D": "Play and theater", "E": "Architecture"}}, {"Question #": "29", "Question": "The art and theory of interpreting texts is called:", "Correct Answer Letter": "B", "Correct Answer Text": "Hermeneutics", "Options": {"A": "Artistic communication", "B": "Hermeneutics", "C": "Semiotics", "D": "Poetics", "E": "Semantics"}}, {"Question #": "30", "Question": "The coincidence of an object created by primitive people with his idea of a perfect object gave rise to man:", "Correct Answer Letter": "A", "Correct Answer Text": "Aesthetic pleasure", "Options": {"A": "Aesthetic pleasure", "B": "Aesthetic judgment", "C": "Aesthetic theory", "D": "Aesthetic ideal", "E": "Understanding aesthetics"}}, {"Question #": "31", "Question": "In Ancient Greece, an idea that governed the creation of works of art with correspondence to the physical world that understood as a model for beauty, truth, and the good:", "Correct Answer Letter": "E", "Correct Answer Text": "mimesis", "Options": {"A": "logos", "B": "anamnesis", "C": "gnosis", "D": "eidos", "E": "mimesis"}}, {"Question #": "32", "Question": "Hermeneutics is:", "Correct Answer Letter": "A", "Correct Answer Text": "The art of explanation and interpretation", "Options": {"A": "The art of explanation and interpretation", "B": "A form of classical science of language", "C": "Irrational philosophy", "D": "A form of worldview", "E": "All of the above"}}, {"Question #": "33", "Question": "The aesthetic attitude towards reality is determined by the value of:", "Correct Answer Letter": "D", "Correct Answer Text": "The beautiful", "Options": {"A": "True knowledge", "B": "Material wealth", "C": "The sacred", "D": "The beautiful", "E": "Thinking"}}, {"Question #": "1", "Question": "Philosopher and theologian who put forward five proofs for the existence of God:", "Correct Answer Letter": "D", "Correct Answer Text": "Thomas Aquinas", "Options": {"A": "Aurelius Augustine", "B": "William of Ockham", "C": "Roger Bacon", "D": "Thomas Aquinas", "E": "Anselm of Canterbury"}}, {"Question #": "2", "Question": "What is the translation of the word “religio” from Latin?:", "Correct Answer Letter": "A", "Correct Answer Text": "bind, connect", "Options": {"A": "bind, connect", "B": "person", "C": "faith, cult", "D": "worshipping", "E": "idol"}}, {"Question #": "3", "Question": "The belief that God is present in all things of nature:", "Correct Answer Letter": "A", "Correct Answer Text": "Pantheism", "Options": {"A": "Pantheism", "B": "Syncretism", "C": "Animism", "D": "Theology", "E": "Anthropology"}}, {"Question #": "4", "Question": "Who said: “Religion is the opium of the masses”?:", "Correct Answer Letter": "A", "Correct Answer Text": "Marx", "Options": {"A": "Marx", "B": "Kierkegaard", "C": "Nietzsche", "D": "Freud", "E": "Schopenhauer"}}, {"Question #": "5", "Question": "An ancient Egyptian text is:", "Correct Answer Letter": "C", "Correct Answer Text": "The Book of Dead", "Options": {"A": "The Book of Songs", "B": "The Book of Rites", "C": "The Book of Dead", "D": "The Book of Changes", "E": "The Book of Sacrifice"}}, {"Question #": "6", "Question": "The sacred book of Zoroastrianism is:", "Correct Answer Letter": "D", "Correct Answer Text": "The Avesta", "Options": {"A": "The Vedas", "B": "Praise of Death", "C": "The Book of History", "D": "The Avesta", "E": "The Book of Songs"}}, {"Question #": "7", "Question": "Religion and the fear of death are the two greatest sources of fear, according to:", "Correct Answer Letter": "C", "Correct Answer Text": "Epicurus", "Options": {"A": "Zeno", "B": "Plotinus", "C": "Epicurus", "D": "Socrates", "E": "Chrysippus"}}, {"Question #": "8", "Question": "The collection of early Buddhist texts is called:", "Correct Answer Letter": "C", "Correct Answer Text": "The Tripitaka", "Options": {"A": "The Vedas", "B": "The Mahabharata", "C": "The Tripitaka", "D": "The Brahmanas", "E": "The Ramayana"}}, {"Question #": "10", "Question": "The first truth of Buddhism is:", "Correct Answer Letter": "C", "Correct Answer Text": "Life is suffering", "Options": {"A": "Do no harm", "B": "Non-action", "C": "Life is suffering", "D": "The soul does not exist after a person's death", "E": "The meaning of life is in pleasure"}}, {"Question #": "11", "Question": "The incompatibility of faith and philosophy was argued by:", "Correct Answer Letter": "E", "Correct Answer Text": "Al-Ghazali", "Options": {"A": "Al-Kindi", "B": "Al-Farabi", "C": "Ibn Sina", "D": "Ibn Rushd", "E": "Al-Ghazali"}}, {"Question #": "12", "Question": "The \"ontological proof\" of the existence of God (i.e., based on the very concept of God) was proposed by:", "Correct Answer Letter": "D", "Correct Answer Text": "Anselm of Canterbury", "Options": {"A": "Augustine of Hippo", "B": "William of Ockham", "C": "Thomas Aquinas", "D": "Anselm of Canterbury", "E": "Peter Abelard"}}, {"Question #": "13", "Question": "The philosophical basis of Augustine's worldview is:", "Correct Answer Letter": "D", "Correct Answer Text": "Neoplatonism", "Options": {"A": "Philosophy of Aristotle", "B": "Atomistic theory", "C": "Epicureanism", "D": "Neoplatonism", "E": "Stoicism"}}, {"Question #": "14", "Question": "If faith helps in practical life, then believe in God, but if not, then do not believe, thought:", "Correct Answer Letter": "B", "Correct Answer Text": "William James", "Options": {"A": "Georg Hegel", "B": "William James", "C": "John Dewey", "D": "John Stuart Mill", "E": "Immanuel Kant"}}, {"Question #": "15", "Question": "\"Word, Life, Science, Creation, Power, Insight, Sensitivity, Justice\" are the \"eight faces\" of Allah, which is called by:", "Correct Answer Letter": "D", "Correct Answer Text": "Abai Kunanbayev", "Options": {"A": "Chokan Valikhanov", "B": "Akhmet Baitursynov", "C": "Magzhan Zhumabayev", "D": "Abai Kunanbayev", "E": "Mustafa Shokay"}}, {"Question #": "16", "Question": "According to Abai, \"the Power of the Most High is expressed in ...\":", "Correct Answer Letter": "A", "Correct Answer Text": "Science and mercy", "Options": {"A": "Science and mercy", "B": "Technology and nature", "C": "Art and culture", "D": "Human and society", "E": "Law and virtue"}}, {"Question #": "17", "Question": "The author of the works \"Canons of Islam\" and \"Notes of the Forgotten\" is:", "Correct Answer Letter": "E", "Correct Answer Text": "Ibrahim Altynsarin", "Options": {"A": "Abai Kunanbayev", "B": "Shakarim Kudaibergenov", "C": "Chokan Valikhanov", "D": "Mırzakıp Dulatov", "E": "Ibrahim Altynsarin"}}, {"Question #": "18", "Question": "The six classical orthodox Vedic schools are:", "Correct Answer Letter": "A", "Correct Answer Text": "Vedanta, Samkhya, Yoga, Nyaya, Vaisheshika, Mimamsa", "Options": {"A": "Vedanta, Samkhya, Yoga, Nyaya, Vaisheshika, Mimamsa", "B": "Jainism, Charvaka, Yoga, Nyaya, Mimamsa, Vaisheshika", "C": "Lokayata, Samkhya, Vedanta, Buddhism, Yoga, Mimamsa", "D": "Vedanta, Samkhya, Yoga, Nyaya, Buddhism, Hinduism", "E": "Jainism, Charvaka, Samkhya, Nyaya, Mimamsa, Lokayata"}}, {"Question #": "19", "Question": "A distinctive feature of the worldview of the French enlighteners, associated with their anti-theological activities is the following:", "Correct Answer Letter": "A", "Correct Answer Text": "Anticlericalism", "Options": {"A": "Anticlericalism", "B": "Secularism", "C": "Humanism", "D": "Enlightenment", "E": "Atheism"}}, {"Question #": "20", "Question": "\"Less superstition - less bigotry, less bigotry - less misery and misfortune\" - these to this day are actual words that have been spoken:", "Correct Answer Letter": "C", "Correct Answer Text": "Voltaire", "Options": {"A": "Diderot", "B": "Rousseau", "C": "Voltaire", "D": "Holbach", "E": "Condorcet"}}, {"Question #": "21", "Question": "The doctrine of the finale of world history, about the ultimate fate of the world and man:", "Correct Answer Letter": "A", "Correct Answer Text": "Eschatology", "Options": {"A": "Eschatology", "B": "Occultism", "C": "Metempsychosis", "D": "The theory of death", "E": "The theory of end"}}, {"Question #": "22", "Question": "According to G. Hegel, the true engine of history is:", "Correct Answer Letter": "C", "Correct Answer Text": "The world spirit", "Options": {"A": "Natural selection", "B": "Class struggle", "C": "The world spirit", "D": "Historical figures", "E": "Spiritual values"}}, {"Question #": "23", "Question": "The caste system is a common feature of many ancient Eastern civilizations. Where did the caste system find its classical embodiment?:", "Correct Answer Letter": "B", "Correct Answer Text": "in India", "Options": {"A": "in China", "B": "in India", "C": "in Babylon", "D": "in Mesopotamia", "E": "in Egypt"}}, {"Question #": "24", "Question": "In contrast to Vedic philosophy, Buddhism sees the possibility of liberation from rebirth:", "Correct Answer Letter": "B", "Correct Answer Text": "in realizing the illusion of the \"self\"", "Options": {"A": "in strict adherence to rituals", "B": "in realizing the illusion of the \"self\"", "C": "in the daily recitation of mantras", "D": "in the mortification of the flesh", "E": "There is no correct answer"}}, {"Question #": "25", "Question": "Which religion is not a world religion?:", "Correct Answer Letter": "C", "Correct Answer Text": "Judaism", "Options": {"A": "Christianity", "B": "Islam", "C": "Judaism", "D": "Buddhism", "E": "There is no correct answer"}}, {"Question #": "1", "Question": "The term \"axial time\" was proposed by:", "Correct Answer Letter": "A", "Correct Answer Text": "K. Jaspers", "Options": {"A": "K. Jaspers", "B": "K. Popper", "C": "A. Camus", "D": "J. Derrida", "E": "M. Heidegger"}}, {"Question #": "2", "Question": "Who introduced the concept of \"archetype\" into psychoanalysis:", "Correct Answer Letter": "B", "Correct Answer Text": "K. Jung", "Options": {"A": "E. Fromm", "B": "K. Jung", "C": "Z. Freud", "D": "F. Nietzsche", "E": "A. Schopenhauer"}}, {"Question #": "3", "Question": "Author of the game concept of culture:", "Correct Answer Letter": "B", "Correct Answer Text": "J. Huizinga", "Options": {"A": "O. Spengler", "B": "J. Huizinga", "C": "F. Nietzsche", "D": "S. Freud", "E": "N. Berdyaev"}}, {"Question #": "4", "Question": "According to Al Farabi, the ideal of society:", "Correct Answer Letter": "C", "Correct Answer Text": "city of virtues", "Options": {"A": "city of the sun", "B": "city of panic", "C": "city of virtues", "D": "city of ambitions", "E": "city of freedom and collectivity"}}, {"Question #": "5", "Question": "Who has been looking for “Zheruyyk” (the promised land) all his life:", "Correct Answer Letter": "B", "Correct Answer Text": "Asan-kaigy", "Options": {"A": "Shalkiiz-zhyrau", "B": "Asan-kaigy", "C": "Bukhar-zhyrau", "D": "Dospambet-zhyrau"}}, {"Question #": "6", "Question": "The concept of an \"open society\" was developed by:", "Correct Answer Letter": "A", "Correct Answer Text": "Popper", "Options": {"A": "Popper", "B": "Plato", "C": "Hegel", "D": "Hobbes", "E": "Spinoza"}}, {"Question #": "7", "Question": "Western attitude towards Middle Eastern, Asian and African societies that characterizes these societies as static and undeveloped:", "Correct Answer Letter": "C", "Correct Answer Text": "orientalism", "Options": {"A": "medievalism", "B": "westernism", "C": "orientalism", "D": "occidentalism", "E": "easternism"}}, {"Question #": "8", "Question": "According to Rousseau, fundamental social problems can be solved by:", "Correct Answer Letter": "A", "Correct Answer Text": "Properly organized education and training", "Options": {"A": "Properly organized education and training", "B": "Development of science and technology", "C": "Strengthening the role of the church in society", "D": "Expanding the powers of government bodies", "E": "Accelerating any religion"}}, {"Question #": "9", "Question": "The theory of \"social contract\" in French Enlightenment was proposed by:", "Correct Answer Letter": "D", "Correct Answer Text": "Rousseau", "Options": {"A": "D'Alembert", "B": "Holbach", "C": "Diderot", "D": "Rousseau", "E": "Montesquieu"}}, {"Question #": "10", "Question": "In T. Hobbes' social theory, the \"Leviathan\" becomes:", "Correct Answer Letter": "B", "Correct Answer Text": "The state", "Options": {"A": "The ruling class", "B": "The state", "C": "The church", "D": "Moral norms", "E": "Science"}}, {"Question #": "11", "Question": "A utopian program for universal social transformation based on communal ownership was presented by:", "Correct Answer Letter": "B", "Correct Answer Text": "Tommaso Campanella in \"The City of the Sun\"", "Options": {"A": "Confucius in \"Conversations and Judgments\"", "B": "Tommaso Campanella in \"The City of the Sun\"", "C": "Plato in \"The Republic\"", "D": "Charles de Montesquieu in \"The Spirit of the Laws\"", "E": "Michel de Montaigne in \"Essays\""}}, {"Question #": "12", "Question": "The founder of utopian socialism is the author of the treatise \"Utopia\":", "Correct Answer Letter": "A", "Correct Answer Text": "Thomas More", "Options": {"A": "Thomas More", "B": "Charles de Montesquieu", "C": "Michel de Montaigne", "D": "Claude Henri de Rouvroy, comte de Saint-Simon", "E": "Charles Fourier"}}, {"Question #": "13", "Question": "Hegel views the historical process as:", "Correct Answer Letter": "C", "Correct Answer Text": "The progress of the spirit in the consciousness of freedom", "Options": {"A": "Social progress", "B": "The process of changing socio-economic formations", "C": "The progress of the spirit in the consciousness of freedom", "D": "Scientific and technological progress", "E": "The succession of scientific paradigms"}}, {"Question #": "14", "Question": "Progress in economics does not always coincide with progress in culture or morality, believed:", "Correct Answer Letter": "B", "Correct Answer Text": "Marx", "Options": {"A": "Diderot", "B": "Marx", "C": "Martin Buber", "D": "Johann Gottlieb Fichte", "E": "Herbert Spencer"}}, {"Question #": "15", "Question": "\"Civilization\" is considered the final stage of development of any culture by:", "Correct Answer Letter": "A", "Correct Answer Text": "Oswald Spengler", "Options": {"A": "Oswald Spengler", "B": "Nikolai Danilevsky", "C": "Arnold J. Toynbee", "D": "Karl Jaspers", "E": "Martin Buber"}}, {"Question #": "16", "Question": "In his study of history, Oswald Spengler applied the method of:", "Correct Answer Letter": "B", "Correct Answer Text": "Morphology", "Options": {"A": "Dialectics", "B": "Morphology", "C": "Deduction", "D": "Induction", "E": "Metaphysics"}}, {"Question #": "17", "Question": "According to Spengler, the cause of the \"transformation\" of culture into \"civilization\" is:", "Correct Answer Letter": "A", "Correct Answer Text": "Dominance of technicism", "Options": {"A": "Dominance of technicism", "B": "Massification of culture", "C": "Decline of morals", "D": "Globalization", "E": "Struggle for power"}}, {"Question #": "18", "Question": "\"Evolution\" is the central concept in the doctrine of:", "Correct Answer Letter": "B", "Correct Answer Text": "Herbert Spencer", "Options": {"A": "John Stuart Mill", "B": "Herbert Spencer", "C": "Auguste Comte", "D": "Saint-Simon", "E": "Jean-Jacques Rousseau"}}, {"Question #": "19", "Question": "The concept of \"ideal type\" was introduced by:", "Correct Answer Letter": "A", "Correct Answer Text": "M. Weber", "Options": {"A": "M. Weber", "B": "K. Marx", "C": "E. Cassirer", "D": "H. Rickert", "E": "E. Durkheim"}}, {"Question #": "20", "Question": "In the work \"A Study of History,\" Arnold Toynbee arrives at the idea that:", "Correct Answer Letter": "B", "Correct Answer Text": "There is no single human civilization", "Options": {"A": "Culture, transforming into civilization, perishes", "B": "There is no single human civilization", "C": "The salvation of humanity is connected with overcoming the disunity of countries and peoples", "D": "Civilizations could only arise on great rivers", "E": "The source of social development is class struggle"}}, {"Question #": "21", "Question": "Local civilizations are a \"response\" to the \"challenge\" of the socio-natural environment, believed:", "Correct Answer Letter": "E", "Correct Answer Text": "Arnold Toynbee", "Options": {"A": "Karl Marx", "B": "Elie Metchnikoff", "C": "Oswald Spengler", "D": "Nikolai Danilevsky", "E": "Arnold Toynbee"}}, {"Question #": "22", "Question": "Totalitarianism finds its origins in the philosophy of Plato:", "Correct Answer Letter": "A", "Correct Answer Text": "Karl Popper in \"The Open Society and Its Enemies\"", "Options": {"A": "Karl Popper in \"The Open Society and Its Enemies\"", "B": "Karl Jaspers in \"The Meaning and Purpose of History\"", "C": "Arnold Toynbee in \"A Study of History\"", "D": "Bertrand Russell in \"The Conquest of Happiness\"", "E": "Oswald Spengler in \"The Decline of the West\""}}, {"Question #": "23", "Question": "In the work \"The Third Wave,\" American futurologist Alvin Toffler defines modern society as:", "Correct Answer Letter": "C", "Correct Answer Text": "Informational", "Options": {"A": "Eco-humanistic", "B": "Computer-based", "C": "Informational", "D": "Civil", "E": "Industrial"}}, {"Question #": "24", "Question": "The concept of the \"post-industrial society\" was proposed by:", "Correct Answer Letter": "D", "Correct Answer Text": "Daniel Bell", "Options": {"A": "Zbigniew Brzezinski", "B": "Alvin Toffler", "C": "Walt Whitman Rostow", "D": "Daniel Bell", "E": "John Kenneth Galbraith"}}, {"Question #": "25", "Question": "The concept of \"social and economic formation\" was introduced by:", "Correct Answer Letter": "A", "Correct Answer Text": "Marx", "Options": {"A": "Marx", "B": "Weber", "C": "Smith", "D": "Ricardo", "E": "Lenin"}}, {"Question #": "26", "Question": "The philosopher who first introduced the distinction between culture and civilisation, contrasting the two:", "Correct Answer Letter": "B", "Correct Answer Text": "O. Spengler", "Options": {"A": "J.-J.Rousseau", "B": "O. Spengler", "C": "A. Toynbee", "D": "N. Berdyaev", "E": "F. Schelling"}}, {"Question #": "27", "Question": "For O. Spengler civilisation is:", "Correct Answer Letter": "A", "Correct Answer Text": "Decline of Culture", "Options": {"A": "Decline of Culture", "B": "Blossoming of Culture", "C": "Stabilization of Culture", "D": "Uprising of the Masses", "E": "Progress of Culture"}}, {"Question #": "28", "Question": "The authors of the \"open and closed society\" theory:", "Correct Answer Letter": "E", "Correct Answer Text": "A. Bergson, K. Popper", "Options": {"A": "J.-P. Sartre, A. Camus", "B": "A. Adler, R. Laing", "C": "K. Marx, E. Fromm", "D": "S. Freud, C.G. Jung", "E": "A. Bergson, K. Popper"}}, {"Question #": "29", "Question": "The opposition between the concepts of culture and civilisation was first presented in the work:", "Correct Answer Letter": "B", "Correct Answer Text": "O. Spengler \"The Decline of the West\"", "Options": {"A": "A. Toynbee \"Culture and Civilization\"", "B": "O. Spengler \"The Decline of the West\"", "C": "M. Weber \"The Protestant Ethic and the Spirit of Capitalism\"", "D": "J. Collingwood \"The Idea of History\"", "E": "S.L. Frank \"Spiritual Foundations of Society\""}}, {"Question #": "30", "Question": "According to O. Spengler's definition, civilization is…:", "Correct Answer Letter": "D", "Correct Answer Text": "The death of culture", "Options": {"A": "Twilight of the gods", "B": "the decline of Europe", "C": "The birth of culture", "D": "The death of culture", "E": "the beginning of the society"}}, {"Question #": "31", "Question": "Plato wrote in his dialogue \"The State\" that if the rulers cease to be wise, the aristocracy gives way to:", "Correct Answer Letter": "A", "Correct Answer Text": "Timocracy", "Options": {"A": "Timocracy", "B": "Politics", "C": "Oligarchies", "D": "Democracy", "E": "Despotism"}}, {"Question #": "32", "Question": "In the sociology of power, Max Weber identified three types of legitimization of power:", "Correct Answer Letter": "C", "Correct Answer Text": "rational, traditional, charismatic", "Options": {"A": "rational, empirical, mechanical", "B": "rational, empirical, charismatic", "C": "rational, traditional, charismatic", "D": "Traditional, deliberative, executive", "E": "executive, advisory, judicial"}}, {"Question #": "33", "Question": "The primary basis for uniting people into society, from the point of view of Emile Durkheim, is:", "Correct Answer Letter": "E", "Correct Answer Text": "A supra-individual community based on solidarity as a \"collective consciousness\" and opposed to natural selfishness", "Options": {"A": "social, i.e. other-oriented, action", "B": "the consistency of those fundamental norms and values that guide people in their lives", "C": "The commonality of the central government, territorial integrity and harmony of the center and the periphery", "D": "The socialization of all its members", "E": "A supra-individual community based on solidarity as a \"collective consciousness\" and opposed to natural selfishness"}}, {"Question #": "34", "Question": "The basis of the formation classification of society is the division of society:", "Correct Answer Letter": "A", "Correct Answer Text": "according to the method of production and exchange", "Options": {"A": "according to the method of production and exchange", "B": "by the presence or absence of writing", "C": "according to the peculiarities of government structures", "D": "according to the degree of stability", "E": "according to the degree of civilization"}}, {"Question #": "35", "Question": "The founder of the doctrine of cultural and historical types of society is:", "Correct Answer Letter": "D", "Correct Answer Text": "Nikolay Danilevsky", "Options": {"A": "Georg Hegel", "B": "Karl Marx", "C": "Max Weber", "D": "Nikolay Danilevsky", "E": "Pitirim Sorokin"}}, {"Question #": "36", "Question": "Oswald Spengler in his cultural concept focuses on the consideration of three historical cultures: ancient, European and Arab. Three \"souls\" correspond to them:", "Correct Answer Letter": "B", "Correct Answer Text": "Apollonian, Faustian, magical", "Options": {"A": "Apollonian, Dionysian, and Faustian", "B": "Apollonian, Faustian, magical", "C": "magical, aesthetic, ethical", "D": "religious, metaphysical, positive", "E": "aesthetic, ethical, religious"}}, {"Question #": "37", "Question": "An open society, according to Popper's definition, is a type of society characterized by:", "Correct Answer Letter": "C", "Correct Answer Text": "Individualism and democratic pluralistic ideology", "Options": {"A": "dynamic social structure and traditionalism", "B": "the ability to innovate and limited mobility", "C": "Individualism and democratic pluralistic ideology", "D": "Criticism and a static social structure", "E": "high mobility and dogmatic authoritarian ideology"}}, {"Question #": "38", "Question": "Social cognition is characterized by ...:", "Correct Answer Letter": "D", "Correct Answer Text": "Complete or partial identity of the subject and the object of cognition of social reality", "Options": {"A": "Absolutely arbitrary subjective construction of social representations", "B": "Impossibility of objective cognition of social phenomena due to the influence of the interests and values of the cognizing subject on the result of cognition", "C": "Complete separation of the subject and the object of cognition", "D": "Complete or partial identity of the subject and the object of cognition of social reality", "E": "Opposition of the subject and the object of cognition"}}, {"Question #": "39", "Question": "The study of the internal interrelation of the elements that make up the social system, as well as the tasks they perform, is a distinctive feature of the method of social philosophy:", "Correct Answer Letter": "B", "Correct Answer Text": "Structural and functional", "Options": {"A": "Cross-cultural", "B": "Structural and functional", "C": "Historical and methodological", "D": "Morphological and genealogical", "E": "Semantic and structural"}}, {"Question #": "40", "Question": "The substance of the material and industrial sphere of life is ...:", "Correct Answer Letter": "B", "Correct Answer Text": "Human labor as a conscious expedient activity", "Options": {"A": "Man as a biosocial being", "B": "Human labor as a conscious expedient activity", "C": "Means of production", "D": "Spiritual needs of man and society", "E": "Material values"}}, {"Question #": "41", "Question": "The impact of limited resources on population growth was studied by:", "Correct Answer Letter": "B", "Correct Answer Text": "T. Malthus", "Options": {"A": "A. Smith", "B": "T. Malthus", "C": "K. Marx", "D": "N. Machiavelli", "E": "L. Pacioli"}}, {"Question #": "42", "Question": "Representative of the civilizational approach in the study of historical development:", "Correct Answer Letter": "A", "Correct Answer Text": "A. Toynbee", "Options": {"A": "A. Toynbee", "B": "F. Nietzsche", "C": "K. Marx", "D": "N. Berdyaev", "E": "U. Rostow"}}, {"Question #": "43", "Question": "The stage of world history, which replaced the savagery and barbarism of mankind, began to be designated by the concept of …:", "Correct Answer Letter": "D", "Correct Answer Text": "Civilization", "Options": {"A": "Culture", "B": "The company", "C": "Formation", "D": "Civilization", "E": "Globalization"}}, {"Question #": "44", "Question": "What is the source of fundamental qualitative changes in society according to the materialistic theory of the historical process:", "Correct Answer Letter": "C", "Correct Answer Text": "Development of material production", "Options": {"A": "Moral improvement of society", "B": "Geographical environment", "C": "Development of material production", "D": "Effective political leadership", "E": "Aesthetics worldview"}}, {"Question #": "45", "Question": "The factor that, according to social Darwinism, is the main driving force of the development of society:", "Correct Answer Letter": "A", "Correct Answer Text": "The struggle for existence", "Options": {"A": "The struggle for existence", "B": "The world spirit", "C": "Class struggle", "D": "The will of outstanding people", "E": "Revolutions"}}, {"Question #": "46", "Question": "The process of historical and evolutionary emergence of society:", "Correct Answer Letter": "A", "Correct Answer Text": "Sociogenesis", "Options": {"A": "Sociogenesis", "B": "Coevolution", "C": "Anthropogenesis", "D": "Socialization", "E": "Development"}}, {"Question #": "47", "Question": "Transformation, change, restructuring of any aspect of social life that does not destroy the foundations of the existing social structure is:", "Correct Answer Letter": "D", "Correct Answer Text": "Reform", "Options": {"A": "Revolution", "B": "Progress", "C": "Regression", "D": "Reform", "E": "Evolution"}}, {"Question #": "48", "Question": "The idea of the \"spirit of laws\" by S. Montesquieu marked the beginning of the direction:", "Correct Answer Letter": "E", "Correct Answer Text": "Geographical determinism", "Options": {"A": "Social fatalism", "B": "Spiritual Monism", "C": "European Humanism", "D": "Linear determinism", "E": "Geographical determinism"}}, {"Question #": "49", "Question": "The modern trend attaches the main importance to the factor of chance in the self-development of society:", "Correct Answer Letter": "B", "Correct Answer Text": "Synergetic", "Options": {"A": "Structuralism", "B": "Synergetic", "C": "Postmodernism", "D": "Hermeneutics", "E": "Eclecticism"}}, {"Question #": "50", "Question": "The author of conception “The End of History”:", "Correct Answer Letter": "A", "Correct Answer Text": "F. Fukuyama", "Options": {"A": "F. Fukuyama", "B": "A. Toynbee", "C": "M. Weber", "D": "O. Spengler", "E": "D. Bell"}}, {"Question #": "51", "Question": "The concept of \"philosophy of history\" was proposed by philosopher:", "Correct Answer Letter": "A", "Correct Answer Text": "Voltaire", "Options": {"A": "Voltaire", "B": "Karl Marx", "C": "Ludwig Feuerbach", "D": "Georg Wilhelm Friedrich Hegel", "E": "Immanuel Kant"}}];
+
+        let currentMode = '';
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let selectedQuestions = [];
+        let selectedAnswer = null;
+
+        function startMode(mode) {
+            currentMode = mode;
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+
+            document.getElementById('mode-selection').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'block';
+
+            if (mode === 'quiz') {
+                selectedQuestions = shuffleArray([...questionsData]).slice(0, 30);
+                loadQuestionWithOptions();
+            } else if (mode === 'practice') {
+                selectedQuestions = [...questionsData];
+                loadQuestionWithOptions();
+            } else if (mode === 'flashcards') {
+                selectedQuestions = shuffleArray([...questionsData]);
+                loadFlashcard();
+            } else if (mode === 'browse') {
+                loadBrowseMode();
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function loadQuestionWithOptions() {
+            if (currentQuestionIndex >= selectedQuestions.length) {
+                finishQuiz();
+                return;
+            }
+
+            selectedAnswer = null;
+            const question = selectedQuestions[currentQuestionIndex];
+            const progress = ((currentQuestionIndex + 1) / selectedQuestions.length) * 100;
+
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `${currentQuestionIndex + 1} / ${selectedQuestions.length}`;
+            document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+            document.getElementById('correct-count').textContent = correctAnswers;
+            document.getElementById('incorrect-count').textContent = incorrectAnswers;
+
+            let optionsHTML = '';
+            const options = question['Options'];
+            for (let letter in options) {
+                optionsHTML += `<div class="option" onclick="selectOption('${letter}')" data-letter="${letter}">
+                    <div class="option-marker"></div>
+                    <div><strong>${letter})</strong> ${options[letter]}</div>
+                </div>`;
+            }
+
+            const questionHTML = `
+                <div class="question-box">
+                    <div class="question-badge">Вопрос #${question['Question #']}</div>
+                    <div class="question-text">${question['Question']}</div>
+                    <div class="options">
+                        ${optionsHTML}
+                    </div>
+                    <div style="margin-top: 40px; text-align: center;">
+                        <button class="btn btn-primary" onclick="checkAnswer()" id="check-btn">Проверить ответ</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('question-area').innerHTML = questionHTML;
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('finish-btn').style.display = 'none';
+        }
+
+        function selectOption(letter) {
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            document.querySelector(`[data-letter="${letter}"]`).classList.add('selected');
+            selectedAnswer = letter;
+        }
+
+        function checkAnswer() {
+            if (!selectedAnswer) {
+                alert('Пожалуйста, выберите ответ!');
+                return;
+            }
+
+            const question = selectedQuestions[currentQuestionIndex];
+            const correctLetter = question['Correct Answer Letter'];
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                const letter = opt.getAttribute('data-letter');
+
+                if (letter === correctLetter) {
+                    opt.classList.add('correct');
+                } else if (letter === selectedAnswer && selectedAnswer !== correctLetter) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            if (selectedAnswer === correctLetter) {
+                correctAnswers++;
+            } else {
+                incorrectAnswers++;
+            }
+
+            document.getElementById('check-btn').style.display = 'none';
+            showNextButton();
+        }
+
+        function showNextButton() {
+            document.getElementById('correct-count').textContent = correctAnswers;
+            document.getElementById('incorrect-count').textContent = incorrectAnswers;
+
+            if (currentQuestionIndex < selectedQuestions.length - 1) {
+                document.getElementById('next-btn').style.display = 'block';
+            } else {
+                document.getElementById('finish-btn').style.display = 'block';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+
+            if (currentMode === 'flashcards') {
+                loadFlashcard();
+            } else {
+                loadQuestionWithOptions();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+
+            const total = correctAnswers + incorrectAnswers;
+            const percentage = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+
+            document.getElementById('final-score').textContent = percentage + '%';
+            document.getElementById('result-correct').textContent = correctAnswers;
+            document.getElementById('result-incorrect').textContent = incorrectAnswers;
+            document.getElementById('result-total').textContent = total;
+        }
+
+        function loadFlashcard() {
+            if (currentQuestionIndex >= selectedQuestions.length) {
+                currentQuestionIndex = 0;
+            }
+
+            const question = selectedQuestions[currentQuestionIndex];
+            const progress = ((currentQuestionIndex + 1) / selectedQuestions.length) * 100;
+
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `${currentQuestionIndex + 1} / ${selectedQuestions.length}`;
+            document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+
+            let optionsHTML = '';
+            const options = question['Options'];
+            const correctLetter = question['Correct Answer Letter'];
+
+            for (let letter in options) {
+                const isCorrect = letter === correctLetter;
+                optionsHTML += `<div class="flashcard-option ${isCorrect ? 'correct' : ''}"><strong>${letter})</strong> ${options[letter]}</div>`;
+            }
+
+            const flashcardHTML = `
+                <div class="flashcard">
+                    <div class="flashcard-question">
+                        <div>${question['Question']}</div>
+                    </div>
+                    <div class="flashcard-options">
+                        ${optionsHTML}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('question-area').innerHTML = flashcardHTML;
+            document.getElementById('next-btn').style.display = 'block';
+            document.getElementById('next-btn').textContent = 'Следующая карточка →';
+            document.getElementById('finish-btn').style.display = 'none';
+        }
+
+        function loadBrowseMode() {
+            let browseHTML = '<div class="search-box"><input type="text" class="search-input" placeholder="🔍 Поиск..." oninput="filterQuestions(this.value)"></div><div id="all-questions">';
+
+            questionsData.forEach((q, index) => {
+                let optionsHTML = '';
+                const options = q['Options'];
+                const correctLetter = q['Correct Answer Letter'];
+
+                for (let letter in options) {
+                    const isCorrect = letter === correctLetter;
+                    optionsHTML += `<div class="flashcard-option ${isCorrect ? 'correct' : ''}" style="margin-bottom: 12px;"><strong>${letter})</strong> ${options[letter]}</div>`;
+                }
+
+                browseHTML += `
+                    <div class="question-box question-item" style="margin-bottom: 30px;">
+                        <div class="question-badge">#${q['Question #']}</div>
+                        <div class="question-text">${q['Question']}</div>
+                        <div style="margin-top: 24px;">
+                            ${optionsHTML}
+                        </div>
+                    </div>
+                `;
+            });
+
+            browseHTML += '</div>';
+            document.getElementById('question-area').innerHTML = browseHTML;
+            document.querySelector('.quiz-header').style.display = 'none';
+        }
+
+        function filterQuestions(searchText) {
+            const items = document.querySelectorAll('.question-item');
+            const search = searchText.toLowerCase();
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(search)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function returnToMenu() {
+            document.getElementById('mode-selection').style.display = 'block';
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'none';
+            document.querySelector('.quiz-header').style.display = 'block';
+        }
+
+        function restartQuiz() {
+            returnToMenu();
+        }
+    </script>
+</body>
+</html>
